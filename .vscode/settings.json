@@ -1,0 +1,24 @@
+{
+    "files.exclude": {
+        "**/*.pyc": true,
+        "**/*.min.js": true,
+        "**/*.js.map": true,
+        "/staticfiles/": true,
+        "node_modules": true,
+        "htmlcov": true,
+        "build": true,
+        "*.log": true,
+        "*.egg-info": true
+    },
+    "editor.formatOnSave": true,
+    "search.followSymlinks": false,
+    "files.trimTrailingWhitespace": true,
+    "files.trimFinalNewlines": true,
+    "files.insertFinalNewline": true,
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "python.testing.autoTestDiscoverOnSaveEnabled": true
+}

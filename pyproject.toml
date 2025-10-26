@@ -1,0 +1,43 @@
+[project]
+name = "dating-api"
+version = "0.1.0"
+description = "FastAPI backend for a dating app"
+authors = [
+    { name = "TyPaporotnyk", email = "daniil.svadkovsky@gmail.com" }
+]
+license = { text = "MIT" }
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.120,<0.121",
+    "uvicorn>=0.38,<0.39"
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4,<9.0",
+    "ruff>=0.9.4",
+    "mypy>=1.14",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["F", "E", "W", "B", "I", "UP", "SIM", "RUF"]
+ignore = ["D203", "D212", "UP035"]
+unfixable = ["F401", "F841"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*.py" = ["D101", "D103"]
+
+[tool.ruff.lint.pyupgrade]
+keep-runtime-typing = true
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+packages = [{ include = "dating", from = "src" }]
