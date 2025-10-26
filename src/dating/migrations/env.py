@@ -8,7 +8,7 @@ from alembic import context
 
 from dating.logging import logging, configure_logging
 from dating.config import SQLALCHEMY_DATABASE_URI
-from dating.database.core import Base
+from dating.database.models import BaseModel
 
 config = context.config
 
@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 config.set_main_option("sqlalchemy.url", str(SQLALCHEMY_DATABASE_URI))
 
-target_metadata = Base.metadata
+target_metadata = BaseModel.metadata
 
 
 def do_run_migrations(connection: Connection) -> None:
