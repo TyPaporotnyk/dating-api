@@ -1,14 +1,11 @@
-from datetime import datetime, timezone
+from datetime import datetime
 from uuid import UUID
 
 from sqlalchemy import DateTime, func
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 
-
-def get_datetime_utc_now() -> datetime:
-    datetime_now = datetime.now(tz=timezone.utc)
-    return datetime_now.replace(tzinfo=None)
+from dating.utils.datetime import get_datetime_utc_now
 
 
 class TimeStampMinix:

@@ -22,4 +22,4 @@ engine = create_db_engine(
     config.SQLALCHEMY_DATABASE_URI,
 )
 
-SessionLocal = async_sessionmaker(bind=engine)
+SessionLocal = async_sessionmaker(bind=engine, expire_on_commit=False)
