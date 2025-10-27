@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.engine.url import make_url
+from sqlalchemy.orm import DeclarativeBase
 
 from dating import config
 
@@ -22,4 +23,8 @@ engine = create_db_engine(
     config.SQLALCHEMY_DATABASE_URI,
 )
 
-SessionLocal = async_sessionmaker(bind=engine, expire_on_commit=False)
+async_session_maker = async_sessionmaker(bind=engine, expire_on_commit=False)
+
+
+class BaseModel(DeclarativeBase):
+    pass

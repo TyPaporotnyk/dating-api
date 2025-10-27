@@ -8,7 +8,8 @@ from alembic import context
 
 from dating.logging import logging, configure_logging
 from dating.config import SQLALCHEMY_DATABASE_URI
-from dating.database.models import BaseModel
+from dating.database.core import BaseModel
+from dating.database.models import *
 
 config = context.config
 

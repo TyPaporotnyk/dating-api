@@ -1,16 +1,20 @@
 import logging
 from fastapi import FastAPI
+from dishka.integrations.fastapi import setup_dishka
 
+from dating.dependencies.container import container
+from dating.exception_handler import generate_exception_request
+from dating.exceptions import AppException
 from dating.logging import configure_logging
-from dating.api import api_router
+from dating import api
 
 logger = logging.getLogger(__name__)
 configure_logging()
 
-app = FastAPI()
+app = FastAPI(title="Dating api", description="Dating api", docs_url="/docs")
 
-api = FastAPI(title="Dating api", description="Dating api", docs_url="/docs")
+app.add_exception_handler(AppException, generate_exception_request)
 
-api.include_router(api_router)
+setup_dishka(container=container, app=app)
 
-app.mount("/api/v1", app=api)
+api.setup(app)

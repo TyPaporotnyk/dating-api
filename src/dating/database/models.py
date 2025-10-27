@@ -1,5 +1,5 @@
-from sqlalchemy.orm import DeclarativeBase
+from dating.users.models import UserModel
 
-
-class BaseModel(DeclarativeBase):
-    pass
+__all__ = [
+    "UserModel",
+]
