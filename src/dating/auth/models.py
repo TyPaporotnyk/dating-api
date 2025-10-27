@@ -1,14 +1,17 @@
+from sqlalchemy import BINARY
 from sqlalchemy.orm import Mapped, mapped_column
 
 from dating.database.mixins import UUIDMixin, TimeStampMinix
 from dating.database.core import BaseModel
-from dating.users.entities import User
+from dating.auth.entities import User
 
 
 class UserModel(BaseModel, UUIDMixin, TimeStampMinix):
     __tablename__ = "users"
 
     email: Mapped[str] = mapped_column(nullable=False, unique=True)
+
+    hashed_password: Mapped[str] = mapped_column(nullable=False)
 
     @classmethod
     def from_entity(cls, entity: User) -> "UserModel":
@@ -17,9 +20,14 @@ class UserModel(BaseModel, UUIDMixin, TimeStampMinix):
             email=entity.email,
             created_at=entity.created_at,
             updated_at=entity.updated_at,
+            hashed_password=entity.hashed_password,
         )
 
     def to_entity(self) -> User:
         return User(
-            id=self.id, email=self.email, created_at=self.created_at, updated_at=self.updated_at
+            id=self.id,
+            email=self.email,
+            created_at=self.created_at,
+            updated_at=self.updated_at,
+            hashed_password=self.hashed_password,
         )

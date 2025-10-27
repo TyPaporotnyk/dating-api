@@ -11,9 +11,20 @@ from dating import api
 logger = logging.getLogger(__name__)
 configure_logging()
 
-app = FastAPI(title="Dating api", description="Dating api", docs_url="/docs")
+swagger_ui_parameters = {
+    "persistAuthorization": True,
+    "displayRequestDuration": True,
+    "tryItOutEnabled": True,
+}
 
-app.add_exception_handler(AppException, generate_exception_request)
+app = FastAPI(
+    title="Dating api",
+    description="Dating api",
+    docs_url="/docs",
+    swagger_ui_parameters=swagger_ui_parameters,
+)
+
+app.add_exception_handler(AppException, generate_exception_request)  # type: ignore
 
 setup_dishka(container=container, app=app)
 

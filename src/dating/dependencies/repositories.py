@@ -1,8 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from dishka import Provider, Scope, provide
 
-from dating.users.repositories.base import BaseUserRepository
-from dating.users.repositories.sqlalchemy import SQLAlchemyUserRepository
+from dating.auth.repositories.base import BaseUserRepository
+from dating.auth.repositories.sqlalchemy import SQLAlchemyUserRepository
 
 
 class RepositoriesProvider(Provider):

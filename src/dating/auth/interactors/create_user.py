@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 
 from dating.database.managers.base import TransactionManager
-from dating.users.commands.create_user import CreateUserCommand
-from dating.users.exceptions import UserAlreadyExist
-from dating.users.repositories.base import BaseUserRepository
-from dating.users.entities import User
+from dating.auth.commands import CreateUserCommand
+from dating.auth.exceptions import UserAlreadyExist
+from dating.auth.repositories.base import BaseUserRepository
+from dating.auth.entities import User
 
 
 @dataclass
@@ -17,6 +17,8 @@ class CreateUserInteractor:
             raise UserAlreadyExist
 
         user = User(email=command.email)
+        user.set_password(password=command.password)
+
         await self.user_repository.create(user)
         await self.transaction_manager.commit()
         return user

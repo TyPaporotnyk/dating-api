@@ -1,7 +1,7 @@
 from typing import Protocol
 from uuid import UUID
 
-from dating.users.entities import User
+from dating.auth.entities import User
 
 
 class BaseUserRepository(Protocol):

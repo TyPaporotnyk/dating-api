@@ -3,12 +3,13 @@ from fastapi import Request, status
 from fastapi.responses import JSONResponse
 
 from dating.exceptions import AppException
-from dating.users.exceptions import UserNotFound
+from dating.auth.exceptions import UserNotFound, AuthError
 
 
 def get_http_status_code(exc: Exception) -> int:
     exc_to_status: dict[Type[Exception], int] = {
         UserNotFound: status.HTTP_404_NOT_FOUND,
+        AuthError: status.HTTP_403_FORBIDDEN,
     }
     return exc_to_status.get(type(exc), status.HTTP_400_BAD_REQUEST)
 

@@ -19,3 +19,21 @@ class UserNotFound(AppException):
     @property
     def message(self) -> str:
         return "User not found"
+
+
+@dataclass(kw_only=True)
+class AuthError(AppException):
+    error_code: str = "AUTH_ERROR"
+
+    @property
+    def message(self) -> str:
+        return "Auth error"
+
+
+@dataclass(kw_only=True)
+class InvalidAccessToken(AppException):
+    error_code = "INVALID_AUTH_TOKEN"
+
+    @property
+    def message(self) -> str:
+        return "Invalid auth token"

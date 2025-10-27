@@ -2,10 +2,10 @@ from uuid import UUID
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from dating.users.entities import User
-from dating.users.exceptions import UserNotFound
-from dating.users.models import UserModel
-from dating.users.repositories.base import BaseUserRepository
+from dating.auth.entities import User
+from dating.auth.exceptions import UserNotFound
+from dating.auth.models import UserModel
+from dating.auth.repositories.base import BaseUserRepository
 
 
 class SQLAlchemyUserRepository(BaseUserRepository):

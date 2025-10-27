@@ -3,6 +3,7 @@ import logging
 from pathlib import Path
 from starlette.config import Config
 
+logger = logging.getLogger(__name__)
 config = Config(".env")
 
 LOG_LEVEL = config("LOG_LEVEL", default=logging.WARNING)
@@ -22,3 +23,12 @@ DATABASE_ENGINE_POOL_RECYCLE = config("DATABASE_ENGINE_POOL_RECYCLE", cast=int, 
 DATABASE_ENGINE_POOL_SIZE = config("DATABASE_ENGINE_POOL_SIZE", cast=int, default=20)
 DATABASE_ENGINE_POOL_TIMEOUT = config("DATABASE_ENGINE_POOL_TIMEOUT", cast=int, default=30)
 SQLALCHEMY_DATABASE_URI = f"postgresql+asyncpg://{DATABASE_USER}:{DATABASE_PASSWORD}@{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_NAME}"
+
+JWT_SECRET = config("JWT_SECRET", default=None)
+JWT_ALG = config("JWT_ALG", default="HS256")
+JWT_EXP = config("JWT_EXP", cast=int, default=86400)
+
+if not JWT_SECRET:
+    logger.warning(
+        "JWT secret not provided, this is required if you are using basic authentication"
+    )

@@ -2,7 +2,7 @@ from datetime import datetime
 from uuid import UUID
 from pydantic import BaseModel, Field, EmailStr
 
-from dating.users.entities import User
+from dating.auth.entities import User
 from dating.utils.datetime import get_datetime_utc_now
 from dating.utils.uuid_v7 import uuid7
 
@@ -28,3 +28,17 @@ class ResponseUserSchema(BaseUserSchema):
 
 class CreateUserSchema(BaseModel):
     email: EmailStr
+    password: str
+
+
+class LoginUserSchema(BaseModel):
+    email: EmailStr
+    password: str
+
+
+class LoginUserResponse(BaseModel):
+    token: str
+
+    @classmethod
+    def from_dto(cls, user: User) -> "LoginUserResponse":
+        return cls(token=user.token)
