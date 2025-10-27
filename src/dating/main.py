@@ -1,5 +1,6 @@
 import logging
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from dishka.integrations.fastapi import setup_dishka
 
 from dating.dependencies.container import container
@@ -27,5 +28,14 @@ app = FastAPI(
 app.add_exception_handler(AppException, generate_exception_request)  # type: ignore
 
 setup_dishka(container=container, app=app)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 api.setup(app)

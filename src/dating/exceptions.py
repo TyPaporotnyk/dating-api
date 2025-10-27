@@ -7,4 +7,4 @@ class AppException(Exception):
 
     @property
     def message(self) -> str:
-        return "Application error occurred"
+        return " ".join(self.error_code.split("_")).lower().capitalize()

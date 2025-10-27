@@ -1,10 +1,8 @@
 from dataclasses import dataclass
-from passlib.context import CryptContext
 
 from dating.entities import Entity
 from dating.utils.jwt import gen_jwt_token
-
-pwd_context = CryptContext(schemes=["argon2", "bcrypt"], deprecated="auto")
+from dating.utils.pwd import pwd_service
 
 
 @dataclass
@@ -13,10 +11,13 @@ class User(Entity):
     hashed_password: str | None = None
 
     def set_password(self, password: str):
-        self.hashed_password = pwd_context.hash(password)
+        self.hashed_password = pwd_service.hash_password(password)
 
     def validate_password(self, password: str) -> bool:
-        return pwd_context.verify(password, self.hashed_password)
+        if not self.hashed_password:
+            raise ValueError("Password is not set")
+
+        return pwd_service.validate_password(password, self.hashed_password)
 
     @property
     def token(self) -> str:
