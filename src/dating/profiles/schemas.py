@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 from dating.profiles.entities import Profile
-from dating.profiles.enums import Gender
+from dating.enums import Gender
 
 
 class CreateProfileSchema(BaseModel):

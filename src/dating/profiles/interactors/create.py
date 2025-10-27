@@ -4,6 +4,7 @@ from dating.auth.repositories.base import BaseUserRepository
 from dating.database.managers.base import TransactionManager
 from dating.profiles.commands import CreateProfileCommand
 from dating.profiles.entities import Profile
+from dating.profiles.exceptions import ProfileAlreadyExists
 from dating.profiles.repositories.base import BaseProfileRepository
 
 
@@ -15,6 +16,9 @@ class CreateProfileInteractor:
 
     async def __call__(self, command: CreateProfileCommand) -> Profile:
         await self.user_repository.try_get_by_id(user_id=command.user_id)
+
+        if await self.profile_repository.get_by_user_id(user_id=command.user_id):
+            raise ProfileAlreadyExists
 
         profile = Profile(
             first_name=command.first_name,

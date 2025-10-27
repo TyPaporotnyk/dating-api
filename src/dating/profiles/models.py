@@ -7,7 +7,7 @@ from sqlalchemy.dialects.postgresql import ENUM
 from dating.database.core import BaseModel
 from dating.database.mixins import TimeStampMinix, UUIDMixin
 from dating.profiles.entities import Profile
-from dating.profiles.enums import Gender
+from dating.enums import Gender
 
 
 class ProfileModel(BaseModel, UUIDMixin, TimeStampMinix):

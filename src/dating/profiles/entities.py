@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from uuid import UUID
 
 from dating.entities import Entity
-from dating.profiles.enums import Gender
+from dating.enums import Gender
 
 
 @dataclass
