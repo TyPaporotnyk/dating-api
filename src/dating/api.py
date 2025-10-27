@@ -2,6 +2,7 @@ from fastapi import FastAPI, APIRouter
 from starlette.responses import JSONResponse
 
 from dating.auth.routers import auth_router, user_router
+from dating.profiles.routers import router as profile_router
 
 
 def setup(app: FastAPI):
@@ -11,5 +12,6 @@ def setup(app: FastAPI):
 
     api_router.include_router(auth_router, prefix="/auth", tags=["auth"])
     api_router.include_router(user_router, prefix="/users", tags=["users"])
+    api_router.include_router(profile_router, prefix="/profiles", tags=["profiles"])
 
     app.include_router(api_router, prefix="/api/v1")
