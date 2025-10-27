@@ -48,8 +48,8 @@ async def login_user(data: LoginUserSchema, interactor: FromDishka[LoginUserInte
     return LoginUserResponse.from_dto(user)
 
 
-@user_router.get("/me", response_model=ResponseUserSchema)
-async def get_auth_user(user_id: CurrentUser, repository: FromDishka[BaseUserRepository]):
+@user_router.get("", response_model=ResponseUserSchema)
+async def get_current_user(user_id: CurrentUser, repository: FromDishka[BaseUserRepository]):
     try:
         user = await repository.try_get_by_id(user_id=user_id)
     except UserNotFound as e:

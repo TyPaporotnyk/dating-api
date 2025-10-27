@@ -4,19 +4,20 @@ from dating.profiles.entities import Profile
 from dating.enums import Gender
 
 
-class CreateProfileSchema(BaseModel):
+class BaseProfileSchema(BaseModel):
     first_name: str
     last_name: str
     age: int
     gender: Gender
 
 
-class ResponseProfileSchema(BaseModel):
-    first_name: str
-    last_name: str
-    age: int
-    gender: Gender
+class CreateProfileSchema(BaseProfileSchema): ...
 
+
+class UpdateProfileSchema(BaseProfileSchema): ...
+
+
+class ResponseProfileSchema(BaseProfileSchema):
     @classmethod
     def from_dto(cls, profile: Profile) -> "ResponseProfileSchema":
         return cls(

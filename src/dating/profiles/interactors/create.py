@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from uuid import UUID
 
 from dating.auth.repositories.base import BaseUserRepository
 from dating.database.managers.base import TransactionManager
@@ -14,10 +15,10 @@ class CreateProfileInteractor:
     profile_repository: BaseProfileRepository
     transaction_manager: TransactionManager
 
-    async def __call__(self, command: CreateProfileCommand) -> Profile:
-        await self.user_repository.try_get_by_id(user_id=command.user_id)
+    async def __call__(self, user_id: UUID, command: CreateProfileCommand) -> Profile:
+        await self.user_repository.try_get_by_id(user_id=user_id)
 
-        if await self.profile_repository.get_by_user_id(user_id=command.user_id):
+        if await self.profile_repository.get_by_user_id(user_id=user_id):
             raise ProfileAlreadyExists
 
         profile = Profile(
@@ -25,7 +26,7 @@ class CreateProfileInteractor:
             last_name=command.last_name,
             age=command.age,
             gender=command.gender,
-            user_id=command.user_id,
+            user_id=user_id,
         )
         await self.profile_repository.create(profile)
         await self.transaction_manager.commit()

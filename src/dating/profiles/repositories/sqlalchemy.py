@@ -1,5 +1,5 @@
 from uuid import UUID
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from dating.profiles.entities import Profile
@@ -28,3 +28,17 @@ class SQLAlchemyProfileRepository(BaseProfileRepository):
             raise ProfileNotFound
 
         return profile
+
+    async def update(self, profile: Profile):
+        query = (
+            update(ProfileModel)
+            .where(ProfileModel.id == profile.id)
+            .values(
+                first_name=profile.first_name,
+                last_name=profile.last_name,
+                age=profile.age,
+                gender=profile.gender,
+                user_id=profile.user_id,
+            )
+        )
+        await self.session.execute(query)

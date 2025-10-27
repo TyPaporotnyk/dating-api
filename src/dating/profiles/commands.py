@@ -12,4 +12,10 @@ class CreateProfileCommand(BaseCommand):
     age: int
     gender: Gender
 
-    user_id: UUID
+
+@dataclass(frozen=True)
+class UpdateProfileCommand(BaseCommand):
+    first_name: str
+    last_name: str
+    age: int
+    gender: Gender
