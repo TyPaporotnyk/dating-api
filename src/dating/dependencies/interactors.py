@@ -7,6 +7,7 @@ from dating.photos.interactors.delete import DeleteProfilePhotoInteractor
 from dating.photos.interactors.get_all import GetAllProfilePhotoInteractor
 from dating.profiles.interactors.create import CreateProfileInteractor
 from dating.profiles.interactors.update import UpdateProfileInteractor
+from dating.profiles.interactors.update_location import UpdateProfileLocationInteractor
 
 
 class InteractorsProvider(Provider):
@@ -17,6 +18,7 @@ class InteractorsProvider(Provider):
 
     create_profile_interactor = provide(CreateProfileInteractor)
     update_prodile_interactor = provide(UpdateProfileInteractor)
+    update_prodile_location_interactor = provide(UpdateProfileLocationInteractor)
 
     create_profile_photo_interactor = provide(CreateProfilePhotoInteractor)
     get_all_profile_photo_interactor = provide(GetAllProfilePhotoInteractor)

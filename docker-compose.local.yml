@@ -1,7 +1,6 @@
 services:
-  postgres:
-    image: postgres:16-alpine
-    hostname: postgres
+  db:
+    image: postgis/postgis:18-3.6
     ports:
       - "5432:5432"
     environment:
@@ -9,13 +8,19 @@ services:
       POSTGRES_PASSWORD: dating
       POSTGRES_DB: dating
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql
+    restart: unless-stopped
+
+  redis:
+    image: redis:latest
+    ports:
+      - 6379:6379
+    volumes:
+      - redis-data:/data
     restart: unless-stopped
 
   pgadmin:
     image: dpage/pgadmin4
-    depends_on:
-      - postgres
     ports:
       - "5555:80"
     environment:
@@ -25,3 +30,4 @@ services:
 
 volumes:
   postgres-data:
+  redis-data:

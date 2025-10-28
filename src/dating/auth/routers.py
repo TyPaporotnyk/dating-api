@@ -15,16 +15,17 @@ from dating.auth.schemas import (
     LoginUserSchema,
     ResponseUserSchema,
 )
+from dating.schemas import ApiResponse
 
 logger = logging.getLogger(__name__)
 auth_router = APIRouter(route_class=DishkaRoute)
 user_router = APIRouter(route_class=DishkaRoute)
 
 
-@auth_router.post("/register", response_model=LoginUserResponse)
+@auth_router.post("/register", response_model=ApiResponse[LoginUserResponse])
 async def create_user(
     data: CreateUserSchema, interaction: FromDishka[CreateUserInteractor]
-) -> LoginUserResponse:
+) -> ApiResponse[LoginUserResponse]:
     command = CreateUserCommand(**data.model_dump())
     try:
         user = await interaction(command=command)
@@ -33,13 +34,13 @@ async def create_user(
         raise e
 
     logger.info("User registered successfully", extra={"email": command.email})
-    return LoginUserResponse.from_dto(user)
+    return ApiResponse(data=LoginUserResponse.from_dto(user))
 
 
-@auth_router.post("/login", response_model=LoginUserResponse)
+@auth_router.post("/login", response_model=ApiResponse[LoginUserResponse])
 async def login_user(
     data: LoginUserSchema, interactor: FromDishka[LoginUserInteractor]
-) -> LoginUserResponse:
+) -> ApiResponse[LoginUserResponse]:
     command = LoginUserCommand(**data.model_dump())
 
     try:
@@ -49,16 +50,16 @@ async def login_user(
         raise e
 
     logger.info("User login successfully", extra={"email": command.email})
-    return LoginUserResponse.from_dto(user)
+    return ApiResponse(data=LoginUserResponse.from_dto(user))
 
 
-@user_router.get("", response_model=ResponseUserSchema)
+@user_router.get("", response_model=ApiResponse[ResponseUserSchema])
 async def get_current_user(
     user_id: CurrentUser, repository: FromDishka[BaseUserRepository]
-) -> ResponseUserSchema:
+) -> ApiResponse[ResponseUserSchema]:
     try:
         user = await repository.try_get_by_id(user_id=user_id)
     except UserNotFound as e:
         logger.warning("User not found", extra={"user_id": user_id})
         raise e
-    return ResponseUserSchema.from_dto(user)
+    return ApiResponse(data=ResponseUserSchema.from_dto(user))

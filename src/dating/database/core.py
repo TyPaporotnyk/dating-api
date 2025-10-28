@@ -9,6 +9,8 @@ def create_db_engine(connection_string: str):
     url = make_url(connection_string)
 
     timeout_kwargs = {
+        "future": True,
+        "plugins": ["geoalchemy2"],
         "pool_timeout": config.DATABASE_ENGINE_POOL_TIMEOUT,
         "pool_recycle": config.DATABASE_ENGINE_POOL_RECYCLE,
         "pool_size": config.DATABASE_ENGINE_POOL_SIZE,

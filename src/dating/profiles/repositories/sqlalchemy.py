@@ -1,5 +1,7 @@
 from uuid import UUID
 
+from geoalchemy2.shape import from_shape
+from shapely import Point as SH_Point
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -31,6 +33,11 @@ class SQLAlchemyProfileRepository(BaseProfileRepository):
         return profile
 
     async def update(self, profile: Profile):
+        location = None
+        if profile.location:
+            sh_point = SH_Point(profile.location.latitude, profile.location.longitude)
+            location = from_shape(sh_point, srid=4326)
+
         query = (
             update(ProfileModel)
             .where(ProfileModel.id == profile.id)
@@ -40,6 +47,7 @@ class SQLAlchemyProfileRepository(BaseProfileRepository):
                 age=profile.age,
                 gender=profile.gender,
                 user_id=profile.user_id,
+                location=location,
             )
         )
         await self.session.execute(query)

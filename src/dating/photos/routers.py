@@ -9,31 +9,34 @@ from dating.photos.interactors.create import CreateProfilePhotoInteractor
 from dating.photos.interactors.delete import DeleteProfilePhotoInteractor
 from dating.photos.interactors.get_all import GetAllProfilePhotoInteractor
 from dating.photos.schemas import BaseProfilePhotoSchema
+from dating.schemas import ApiResponse
 from dating.utils.files import validate_file_size_type
 
 router = APIRouter(route_class=DishkaRoute)
 
 
-@router.post("", response_model=BaseProfilePhotoSchema)
+@router.post("", response_model=ApiResponse[BaseProfilePhotoSchema])
 async def upload_photo(
     current_user_id: CurrentUser,
     interactor: FromDishka[CreateProfilePhotoInteractor],
     file: UploadFile = File(...),
-) -> BaseProfilePhotoSchema:
+) -> ApiResponse[BaseProfilePhotoSchema]:
     validate_file_size_type(file)
     command = CreateProfilePhotoCommand(file=await file.read())
     profile_photo = await interactor(user_id=current_user_id, command=command)
 
-    return BaseProfilePhotoSchema.from_dto(profile_photo)
+    return ApiResponse(data=BaseProfilePhotoSchema.from_dto(profile_photo))
 
 
-@router.get("", response_model=list[BaseProfilePhotoSchema])
+@router.get("", response_model=ApiResponse[list[BaseProfilePhotoSchema]])
 async def get_all_photos(
     current_user_id: CurrentUser, interactor: FromDishka[GetAllProfilePhotoInteractor]
-) -> list[BaseProfilePhotoSchema]:
+) -> ApiResponse[list[BaseProfilePhotoSchema]]:
     profile_photos = await interactor(user_id=current_user_id)
 
-    return [BaseProfilePhotoSchema.from_dto(profile_photo) for profile_photo in profile_photos]
+    return ApiResponse(
+        data=[BaseProfilePhotoSchema.from_dto(profile_photo) for profile_photo in profile_photos]
+    )
 
 
 @router.delete("/{image_id}")
