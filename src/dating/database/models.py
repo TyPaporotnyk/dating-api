@@ -1,9 +1,9 @@
 from dating.auth.models import UserModel
-from dating.profiles.models import ProfileModel
 from dating.photos.models import ProfilePhotoModel
+from dating.profiles.models import ProfileModel
 
 __all__ = [
-    "UserModel",
     "ProfileModel",
     "ProfilePhotoModel",
+    "UserModel",
 ]

@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 
-from dating.database.managers.base import TransactionManager
 from dating.auth.commands import CreateUserCommand
+from dating.auth.entities import User
 from dating.auth.exceptions import UserAlreadyExist
 from dating.auth.repositories.base import BaseUserRepository
-from dating.auth.entities import User
+from dating.database.managers.base import TransactionManager
 
 
 @dataclass

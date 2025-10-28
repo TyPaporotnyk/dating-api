@@ -1,7 +1,7 @@
 import logging
 
-from fastapi import APIRouter
 from dishka.integrations.fastapi import DishkaRoute, FromDishka
+from fastapi import APIRouter
 
 from dating.auth.commands import CreateUserCommand, LoginUserCommand
 from dating.auth.dependencies import CurrentUser
@@ -22,7 +22,9 @@ user_router = APIRouter(route_class=DishkaRoute)
 
 
 @auth_router.post("/register", response_model=LoginUserResponse)
-async def create_user(data: CreateUserSchema, interaction: FromDishka[CreateUserInteractor]):
+async def create_user(
+    data: CreateUserSchema, interaction: FromDishka[CreateUserInteractor]
+) -> LoginUserResponse:
     command = CreateUserCommand(**data.model_dump())
     try:
         user = await interaction(command=command)
@@ -35,7 +37,9 @@ async def create_user(data: CreateUserSchema, interaction: FromDishka[CreateUser
 
 
 @auth_router.post("/login", response_model=LoginUserResponse)
-async def login_user(data: LoginUserSchema, interactor: FromDishka[LoginUserInteractor]):
+async def login_user(
+    data: LoginUserSchema, interactor: FromDishka[LoginUserInteractor]
+) -> LoginUserResponse:
     command = LoginUserCommand(**data.model_dump())
 
     try:
@@ -44,12 +48,14 @@ async def login_user(data: LoginUserSchema, interactor: FromDishka[LoginUserInte
         logger.warning("User login failed: invalid credentials", extra={"email": command.email})
         raise e
 
-    logger.info("User login successfuly", extra={"email": command.email})
+    logger.info("User login successfully", extra={"email": command.email})
     return LoginUserResponse.from_dto(user)
 
 
 @user_router.get("", response_model=ResponseUserSchema)
-async def get_current_user(user_id: CurrentUser, repository: FromDishka[BaseUserRepository]):
+async def get_current_user(
+    user_id: CurrentUser, repository: FromDishka[BaseUserRepository]
+) -> ResponseUserSchema:
     try:
         user = await repository.try_get_by_id(user_id=user_id)
     except UserNotFound as e:

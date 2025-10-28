@@ -10,4 +10,4 @@ class ProfileNotFound(AppException):
 
 @dataclass(kw_only=True)
 class ProfileAlreadyExists(AppException):
-    error_code: str = "PROFILE_ALREDY_EXISTS"
+    error_code: str = "PROFILE_ALREADY_EXISTS"

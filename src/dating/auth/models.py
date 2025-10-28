@@ -1,9 +1,8 @@
-from sqlalchemy import BINARY
 from sqlalchemy.orm import Mapped, mapped_column
 
-from dating.database.mixins import UUIDMixin, TimeStampMinix
-from dating.database.core import BaseModel
 from dating.auth.entities import User
+from dating.database.core import BaseModel
+from dating.database.mixins import TimeStampMinix, UUIDMixin
 
 
 class UserModel(BaseModel, UUIDMixin, TimeStampMinix):

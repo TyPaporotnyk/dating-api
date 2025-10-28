@@ -1,9 +1,10 @@
 from uuid import UUID
-from sqlalchemy import delete, select, and_
+
+from sqlalchemy import and_, delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from dating.photos.models import ProfilePhotoModel
 from dating.photos.entities import ProfilePhoto
+from dating.photos.models import ProfilePhotoModel
 from dating.photos.repositories.base import BaseProfileImageRepository
 
 

@@ -1,13 +1,13 @@
 from uuid import UUID
 
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.dialects.postgresql import ENUM
+from sqlalchemy.orm import Mapped, mapped_column
 
 from dating.database.core import BaseModel
 from dating.database.mixins import TimeStampMinix, UUIDMixin
-from dating.profiles.entities import Profile
 from dating.enums import Gender
+from dating.profiles.entities import Profile
 
 
 class ProfileModel(BaseModel, UUIDMixin, TimeStampMinix):

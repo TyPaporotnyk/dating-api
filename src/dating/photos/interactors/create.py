@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from uuid import UUID, uuid4
-from pathlib import Path
 
 from dating.database.managers.base import TransactionManager
 from dating.photos.commands import CreateProfilePhotoCommand

@@ -1,5 +1,5 @@
-from fastapi import HTTPException, status, UploadFile
 import filetype
+from fastapi import HTTPException, UploadFile, status
 
 
 def validate_file_size_type(file: UploadFile):

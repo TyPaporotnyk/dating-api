@@ -1,8 +1,7 @@
 from abc import ABC
+from dataclasses import dataclass, field
 from datetime import datetime
 from uuid import UUID
-
-from dataclasses import dataclass, field
 
 from dating.utils.datetime import get_datetime_utc_now
 from dating.utils.uuid_v7 import uuid7

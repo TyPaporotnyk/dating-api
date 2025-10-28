@@ -1,9 +1,10 @@
 from uuid import UUID
+
 from sqlalchemy import ForeignKey, false
 from sqlalchemy.orm import Mapped, mapped_column
 
 from dating.database.core import BaseModel
-from dating.database.mixins import UUIDMixin, TimeStampMinix
+from dating.database.mixins import TimeStampMinix, UUIDMixin
 from dating.photos.entities import ProfilePhoto
 
 

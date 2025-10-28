@@ -1,16 +1,16 @@
 from dishka import make_async_container
 
 from dating.dependencies.base import BaseAppProvider
-from dating.dependencies.repositories import RepositoriesProvider
 from dating.dependencies.interactors import InteractorsProvider
+from dating.dependencies.repositories import RepositoriesProvider
 
 
 def make_base_providers():
-    return (
+    return [
         BaseAppProvider(),
         RepositoriesProvider(),
         InteractorsProvider(),
-    )
+    ]
 
 
 def make_base_container():

@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from dating.database.managers.base import TransactionManager

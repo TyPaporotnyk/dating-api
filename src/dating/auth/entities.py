@@ -10,7 +10,7 @@ class User(Entity):
     email: str
     hashed_password: str | None = None
 
-    def set_password(self, password: str):
+    def set_password(self, password: str) -> None:
         self.hashed_password = pwd_service.hash_password(password)
 
     def validate_password(self, password: str) -> bool:

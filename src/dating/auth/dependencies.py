@@ -1,7 +1,8 @@
 from typing import Annotated
 from uuid import UUID
+
 from fastapi import Depends
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from dating.auth.exceptions import AuthError
 from dating.utils.jwt import validate_jwt_token

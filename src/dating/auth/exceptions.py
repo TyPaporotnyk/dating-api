@@ -5,7 +5,7 @@ from dating.exceptions import AppException
 
 @dataclass(kw_only=True)
 class UserAlreadyExist(AppException):
-    error_code: str = "USER_ALREDY_EXIST"
+    error_code: str = "USER_ALREADY_EXIST"
 
 
 @dataclass(kw_only=True)

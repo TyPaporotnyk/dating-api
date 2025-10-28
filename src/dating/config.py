@@ -1,6 +1,6 @@
 import logging
-
 from pathlib import Path
+
 from starlette.config import Config
 
 logger = logging.getLogger(__name__)
@@ -22,7 +22,10 @@ DATABASE_ENGINE_POOL_PING = config("DATABASE_ENGINE_POOL_PING", default=False)
 DATABASE_ENGINE_POOL_RECYCLE = config("DATABASE_ENGINE_POOL_RECYCLE", cast=int, default=3600)
 DATABASE_ENGINE_POOL_SIZE = config("DATABASE_ENGINE_POOL_SIZE", cast=int, default=20)
 DATABASE_ENGINE_POOL_TIMEOUT = config("DATABASE_ENGINE_POOL_TIMEOUT", cast=int, default=30)
-SQLALCHEMY_DATABASE_URI = f"postgresql+asyncpg://{DATABASE_USER}:{DATABASE_PASSWORD}@{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_NAME}"
+SQLALCHEMY_DATABASE_URI = (
+    f"postgresql+asyncpg://{DATABASE_USER}:{DATABASE_PASSWORD}"
+    f"@{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_NAME}"
+)
 
 JWT_SECRET = config("JWT_SECRET", default=None)
 JWT_ALG = config("JWT_ALG", default="HS256")

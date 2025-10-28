@@ -1,11 +1,11 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import APIRouter, FastAPI
 
 from dating.auth.routers import auth_router, user_router
-from dating.profiles.routers import router as profile_router
 from dating.photos.routers import router as photo_router
+from dating.profiles.routers import router as profile_router
 
 
-def setup(app: FastAPI):
+def setup(app: FastAPI) -> None:
     api_router = APIRouter()
 
     api_router.include_router(auth_router, prefix="/auth", tags=["auth"])
