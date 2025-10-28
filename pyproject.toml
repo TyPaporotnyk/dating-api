@@ -27,13 +27,10 @@ dependencies = [
 [dependency-groups]
 dev = [
     "pytest>=8.4.2",
-    "ruff>=0.14.2",
-    "mypy>=1.18.2",
     "pytest-asyncio (>=1.2.0,<2.0.0)",
-    "pre-commit (>=4.3.0,<5.0.0)",
-    "types-passlib (>=1.7.7.20250602,<2.0.0.0)",
-    "types-aiofiles (>=25.1.0.20251011,<26.0.0.0)",
+    "ruff>=0.14.2",
     "flake8 (>=7.3.0,<8.0.0)",
+    "pre-commit (>=4.3.0,<5.0.0)",
 ]
 
 [build-system]
@@ -122,39 +119,6 @@ addopts = [
     "--strict-config",
     "--disable-warnings",
 ]
-
-[tool.pyright]
-include = ["src"]
-exclude = ["migrations", "tests"]
-pythonVersion = "3.13"
-typeCheckingMode = "basic"
-reportMissingImports = false
-reportMissingTypeStubs = false
-reportCallIssue = false
-reportGeneralTypeIssues = false
-reportUnusedImport = true
-reportUnusedClass = true
-reportUnusedFunction = true
-reportDuplicateImport = true
-
-[tool.mypy]
-python_version = "3.13"
-check_untyped_defs = true
-disallow_any_generics = true
-disallow_incomplete_defs = true
-disallow_untyped_defs = true
-no_implicit_optional = true
-warn_redundant_casts = true
-warn_unused_ignores = true
-
-[[tool.mypy.overrides]]
-module = [
-    "alembic.*",
-    "faker.*",
-    "factory.*",
-    "psycopg2.*",
-]
-ignore_missing_imports = true
 
 [tool.typos.default.extend-words]
 selectin = "selectin"
