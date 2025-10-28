@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from uuid import UUID
 
 from dating.commands import BaseCommand
 from dating.enums import Gender
