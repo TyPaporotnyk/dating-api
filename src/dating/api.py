@@ -15,7 +15,7 @@ def setup(app: FastAPI) -> None:
 
     account_router.include_router(user_router, prefix="/me")
 
-    account_router.include_router(profile_router, prefix="/profile")
+    account_router.include_router(profile_router, prefix="/profiles")
     account_router.include_router(photo_router, prefix="/photos")
     account_router.include_router(profile_filter_router, prefix="/filters")
 
