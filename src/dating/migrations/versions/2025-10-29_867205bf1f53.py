@@ -1,19 +1,19 @@
 """empty message
 
-Revision ID: 00dd9175dde6
+Revision ID: 867205bf1f53
 Revises: 
-Create Date: 2025-10-28 23:41:56.697772
+Create Date: 2025-10-29 00:11:33.885309
 
 """
 from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
-from geoalchemy2 import Geometry
+from geoalchemy2 import Geography
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision: str = '00dd9175dde6'
+revision: str = '867205bf1f53'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -38,7 +38,7 @@ def upgrade() -> None:
     sa.Column('last_name', sa.String(), nullable=False),
     sa.Column('age', sa.Integer(), nullable=False),
     sa.Column('gender', postgresql.ENUM('MALE', 'FEMALE', 'OTHER', name='gender_enum'), nullable=False),
-    sa.Column('location', Geometry(geometry_type='POINT', srid=4326, dimension=2, from_text='ST_GeomFromEWKT', name='geometry'), nullable=True),
+    sa.Column('location', Geography(geometry_type='POINT', srid=4326, dimension=2, from_text='ST_GeogFromText', name='geography'), nullable=True),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),

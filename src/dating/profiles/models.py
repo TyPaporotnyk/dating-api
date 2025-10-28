@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from geoalchemy2 import Geometry, WKBElement
+from geoalchemy2 import Geography, WKBElement
 from geoalchemy2.shape import to_shape
 from shapely import Point as SH_Point
 from sqlalchemy import ForeignKey
@@ -25,7 +25,7 @@ class ProfileModel(BaseModel, UUIDMixin, TimeStampMinix):
     gender: Mapped[Gender] = mapped_column(ENUM(Gender, name="gender_enum"), nullable=False)
 
     location: Mapped[WKBElement] = mapped_column(
-        Geometry("POINT", srid=4326),
+        Geography("POINT", srid=4326),
         nullable=True,
     )
 
