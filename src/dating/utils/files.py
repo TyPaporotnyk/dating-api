@@ -5,9 +5,18 @@ import filetype
 def validate_file_size_type(file: UploadFile):
     MAX_FILE_SIZE = 2 * 1024 * 1024  # 2 MB
     ACCEPTED_FILE_TYPES = {
-        "image/png", "image/jpeg", "image/jpg",
-        "image/heic", "image/heif", "image/heics",
-        "png", "jpeg", "jpg", "heic", "heif", "heics"
+        "image/png",
+        "image/jpeg",
+        "image/jpg",
+        "image/heic",
+        "image/heif",
+        "image/heics",
+        "png",
+        "jpeg",
+        "jpg",
+        "heic",
+        "heif",
+        "heics",
     }
 
     if file.content_type not in ACCEPTED_FILE_TYPES:
