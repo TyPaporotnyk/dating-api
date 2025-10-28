@@ -2,6 +2,8 @@ from dishka import Provider, Scope, provide
 
 from dating.auth.interactors.create_user import CreateUserInteractor
 from dating.auth.interactors.login import LoginUserInteractor
+from dating.filters.interactors.create import CreateProfileFilterInteractor
+from dating.filters.interactors.update import UpdateProfileFilterInteractor
 from dating.photos.interactors.create import CreateProfilePhotoInteractor
 from dating.photos.interactors.delete import DeleteProfilePhotoInteractor
 from dating.photos.interactors.get_all import GetAllProfilePhotoInteractor
@@ -23,3 +25,6 @@ class InteractorsProvider(Provider):
     create_profile_photo_interactor = provide(CreateProfilePhotoInteractor)
     get_all_profile_photo_interactor = provide(GetAllProfilePhotoInteractor)
     delete_profile_photo_interactor = provide(DeleteProfilePhotoInteractor)
+
+    create_profile_filter_interactor = provide(CreateProfileFilterInteractor)
+    update_prodile_filter_interactor = provide(UpdateProfileFilterInteractor)

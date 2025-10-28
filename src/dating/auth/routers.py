@@ -18,8 +18,8 @@ from dating.auth.schemas import (
 from dating.schemas import ApiResponse
 
 logger = logging.getLogger(__name__)
-auth_router = APIRouter(route_class=DishkaRoute)
-user_router = APIRouter(route_class=DishkaRoute)
+auth_router = APIRouter(route_class=DishkaRoute, tags=["auth"])
+user_router = APIRouter(route_class=DishkaRoute, tags=["users"])
 
 
 @auth_router.post("/register", response_model=ApiResponse[LoginUserResponse])

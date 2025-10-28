@@ -20,7 +20,7 @@ from dating.profiles.schemas import (
 from dating.schemas import ApiResponse
 from dating.value_objects.coordinates import Coordinates
 
-router = APIRouter(route_class=DishkaRoute)
+router = APIRouter(route_class=DishkaRoute, tags=["profile"])
 
 
 @router.get("", response_model=ApiResponse[ResponseProfileSchema])

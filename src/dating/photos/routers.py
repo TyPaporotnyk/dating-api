@@ -12,7 +12,7 @@ from dating.photos.schemas import BaseProfilePhotoSchema
 from dating.schemas import ApiResponse
 from dating.utils.files import validate_file_size_type
 
-router = APIRouter(route_class=DishkaRoute)
+router = APIRouter(route_class=DishkaRoute, tags=["photos"])
 
 
 @router.post("", response_model=ApiResponse[BaseProfilePhotoSchema])
