@@ -10,8 +10,6 @@ LOG_LEVEL = config("LOG_LEVEL", default=logging.WARNING)
 ENV = config("ENV", default="local")
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-STATIC_DIR = BASE_DIR / "static"
-MEDIA_DIR = BASE_DIR / "media"
 
 DATABASE_NAME = config("DATABASE_NAME")
 DATABASE_USER = config("DATABASE_USER")
@@ -34,3 +32,6 @@ if not JWT_SECRET:
     logger.warning(
         "JWT secret not provided, this is required if you are using basic authentication"
     )
+
+MEDIA_DIR = BASE_DIR / "media"
+MEDIA_PATH = "/media"

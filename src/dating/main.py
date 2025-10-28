@@ -2,7 +2,9 @@ import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dishka.integrations.fastapi import setup_dishka
+from fastapi.staticfiles import StaticFiles
 
+from dating.config import MEDIA_DIR, MEDIA_PATH
 from dating.dependencies.container import container
 from dating.exception_handler import generate_exception_request
 from dating.exceptions import AppException
@@ -37,5 +39,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.mount(MEDIA_PATH, StaticFiles(directory=MEDIA_DIR), name="media")
 
 api.setup(app)
