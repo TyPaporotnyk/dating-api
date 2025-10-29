@@ -29,7 +29,8 @@ SQLALCHEMY_DATABASE_URI = (
 
 JWT_SECRET = config("JWT_SECRET", default=None)
 JWT_ALG = config("JWT_ALG", default="HS256")
-JWT_EXP = config("JWT_EXP", cast=int, default=86400)
+JWT_ACCESS_EXP = config("JWT_ACCESS_EXP", cast=int, default=86400)
+JWT_REFRESH_EXP = config("JWT_REFRESH_EXP", cast=int, default=2592000)
 
 if not JWT_SECRET:
     logger.warning(

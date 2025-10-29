@@ -1,8 +1,7 @@
 from dataclasses import dataclass
 
+from dating.auth.services.pwd import pwd_service
 from dating.entities import Entity
-from dating.utils.jwt import gen_jwt_token
-from dating.utils.pwd import pwd_service
 
 
 @dataclass
@@ -18,7 +17,3 @@ class User(Entity):
             raise ValueError("Password is not set")
 
         return pwd_service.validate_password(password, self.hashed_password)
-
-    @property
-    def token(self) -> str:
-        return gen_jwt_token(user_id=self.id)
