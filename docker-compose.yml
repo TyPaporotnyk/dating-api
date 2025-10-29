@@ -7,7 +7,6 @@ services:
       - ./nginx/configs/:/etc/nginx/sites-enabled/:ro
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./static/:/var/www/app/static/:ro
-
     depends_on:
       - app
 
@@ -27,6 +26,7 @@ services:
     depends_on:
       - db
       - redis
+      - rabbitmq
 
   db:
     image: postgis/postgis:18-3.6
@@ -44,7 +44,18 @@ services:
       - redis-data:/data
     restart: unless-stopped
 
+  rabbitmq:
+    image: rabbitmq:management
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    ports:
+      - 15672:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    restart: unless-stopped
 
 volumes:
   postgres-data:
   redis-data:
+  rabbitmq-data:
