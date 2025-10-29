@@ -5,6 +5,7 @@ from dating.candidates.repositories.base import BaseCandidatesRepository
 from dating.filters.entities import ProfileFilter
 from dating.filters.models import ProfileFilterModel
 from dating.profiles.entities import Profile
+from dating.profiles.exceptions import ProfileLocationRequired
 from dating.profiles.models import ProfileModel
 
 
@@ -18,7 +19,7 @@ class SQLAlchemyCandidatesRepository(BaseCandidatesRepository):
         user_location = current_user_profile.location
 
         if not user_location:
-            raise ValueError("Current user profile has no location")
+            raise ProfileLocationRequired
 
         user_point = func.ST_SetSRID(
             func.ST_MakePoint(user_location.longitude, user_location.latitude), 4326

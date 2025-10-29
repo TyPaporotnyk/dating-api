@@ -5,6 +5,7 @@ from dating.auth.interactors.login import LoginUserInteractor
 from dating.candidates.interactors.search import SearchCandidatesInteractor
 from dating.filters.interactors.create import CreateProfileFilterInteractor
 from dating.filters.interactors.update import UpdateProfileFilterInteractor
+from dating.interactions.interactors.match import CreateInteractionInteractor
 from dating.photos.interactors.create import CreateProfilePhotoInteractor
 from dating.photos.interactors.delete import DeleteProfilePhotoInteractor
 from dating.photos.interactors.get_all import GetAllProfilePhotoInteractor
@@ -31,3 +32,5 @@ class InteractorsProvider(Provider):
     update_prodile_filter_interactor = provide(UpdateProfileFilterInteractor)
 
     search_candidates_interactor = provide(SearchCandidatesInteractor)
+
+    create_interactor_interactor = provide(CreateInteractionInteractor)

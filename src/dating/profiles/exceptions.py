@@ -11,3 +11,8 @@ class ProfileNotFound(AppException):
 @dataclass(kw_only=True)
 class ProfileAlreadyExists(AppException):
     error_code: str = "PROFILE_ALREADY_EXISTS"
+
+
+@dataclass(kw_only=True)
+class ProfileLocationRequired(AppException):
+    error_code: str = "PROFILE_LOCATION_REQUIRED"

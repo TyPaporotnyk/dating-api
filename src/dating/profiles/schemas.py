@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from pydantic import BaseModel
 
 from dating.enums import Gender
@@ -19,11 +21,15 @@ class UpdateProfileSchema(BaseProfileSchema): ...
 
 
 class ResponseProfileSchema(BaseProfileSchema):
+    id: UUID
+    user_id: UUID
     location: Coordinates | None = None
 
     @classmethod
     def from_dto(cls, profile: Profile) -> "ResponseProfileSchema":
         return cls(
+            id=profile.id,
+            user_id=profile.user_id,
             first_name=profile.first_name,
             last_name=profile.last_name,
             age=profile.age,
