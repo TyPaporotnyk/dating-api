@@ -1,9 +1,11 @@
 from dataclasses import dataclass
 from uuid import UUID, uuid4
 
+from dating.config import MAX_PROFILE_IMAGES
 from dating.database.managers.base import TransactionManager
 from dating.photos.commands import CreateProfilePhotoCommand
 from dating.photos.entities import ProfilePhoto
+from dating.photos.exceptions import MaxProfileImagesCountReached
 from dating.photos.repositories.base import BaseProfileImageRepository
 from dating.profiles.repositories.base import BaseProfileRepository
 from dating.storages.base import Storage
@@ -18,6 +20,11 @@ class CreateProfilePhotoInteractor:
 
     async def __call__(self, user_id: UUID, command: CreateProfilePhotoCommand) -> ProfilePhoto:
         profile = await self.profile_repository.try_get_by_user_id(user_id=user_id)
+
+        images_count = await self.profile_image_repository.get_count(profile_id=profile.id)
+
+        if images_count >= MAX_PROFILE_IMAGES:
+            raise MaxProfileImagesCountReached
 
         photo_path = f"users/{user_id}/profile/{profile.id}/images"
         image_name = f"{uuid4()}.jpg"
