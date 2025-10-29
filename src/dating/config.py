@@ -38,3 +38,8 @@ if not JWT_SECRET:
 
 MEDIA_DIR = BASE_DIR / "media"
 MEDIA_PATH = "/media"
+
+REDIS_HOST = config("REDIS_HOST", default="127.0.0.1")
+REDIS_PORT = config("REDIS_PORT", cast=int, default=6379)
+REDIS_DB = config("REDIS_DB", cast=int, default=0)
+REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}"
