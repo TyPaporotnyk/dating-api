@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from aiofiles import open, os
+from aiofiles import open
 
 from dating.config import MEDIA_DIR, MEDIA_PATH
 from dating.photos.storages.base import Storage
@@ -22,6 +22,5 @@ class LocalStorage(Storage):
 
         return file_url
 
-    async def delete(self, path: Path):
-        if path.exists():
-            await os.remove(path)
+    async def delete(self, path: str | Path):
+        raise NotImplementedError

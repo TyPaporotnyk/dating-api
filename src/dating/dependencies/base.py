@@ -3,11 +3,18 @@ from collections.abc import AsyncGenerator
 from dishka import Provider, Scope, provide
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from dating.config import (
+    S3_ACCESS_KEY_ID,
+    S3_BUCKET_NAME,
+    S3_ENDPOINT_URL,
+    S3_PUBLIC_URL,
+    S3_SECRET_ACCESS_KEY,
+)
 from dating.database.core import async_session_maker
 from dating.database.managers.base import TransactionManager
 from dating.database.managers.sqlalchemy import SQLAlchemyTransactionManager
 from dating.photos.storages.base import Storage
-from dating.photos.storages.local import LocalStorage
+from dating.photos.storages.s3 import S3Credentials, S3Storage
 
 
 class BaseAppProvider(Provider):
@@ -22,4 +29,12 @@ class BaseAppProvider(Provider):
 
     @provide(scope=Scope.APP)
     def get_storage_manager(self) -> Storage:
-        return LocalStorage()
+        return S3Storage(
+            S3Credentials(
+                bucket_name=S3_BUCKET_NAME,
+                public_url=S3_PUBLIC_URL,
+                endpoint_url=S3_ENDPOINT_URL,
+                access_key_id=S3_ACCESS_KEY_ID,
+                secret_access_key=S3_SECRET_ACCESS_KEY,
+            )
+        )

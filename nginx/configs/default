@@ -30,8 +30,4 @@ server {
     location /static/ {
         alias $base/static/;
     }
-
-    location /media/ {
-        alias $base/media/;
-    }
 }

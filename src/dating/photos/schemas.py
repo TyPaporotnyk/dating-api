@@ -20,7 +20,7 @@ class BaseProfilePhotoSchema(BaseModel):
     def from_dto(cls, profile_photo: ProfilePhoto) -> "BaseProfilePhotoSchema":
         return cls(
             id=profile_photo.id,
-            url=profile_photo.url,
+            url=profile_photo.full_url,
             order=profile_photo.order,
             is_main=profile_photo.is_main,
             created_at=profile_photo.created_at,

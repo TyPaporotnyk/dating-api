@@ -24,7 +24,6 @@ class DeleteProfilePhotoInteractor:
             raise ImageNotFound
 
         await self.profile_image_repository.delete(image_id=image_id)
-        # TODO: Need no add deleting file after deleting instance
-        # await self.storage.delete(image.url)
+        await self.storage.delete(image.url)
 
         await self.transaction_manager.commit()

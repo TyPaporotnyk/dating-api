@@ -46,3 +46,9 @@ REDIS_HOST = config("REDIS_HOST", default="127.0.0.1")
 REDIS_PORT = config("REDIS_PORT", cast=int, default=6379)
 REDIS_DB = config("REDIS_DB", cast=int, default=0)
 REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}"
+
+S3_ENDPOINT_URL = config("S3_ENDPOINT_URL")
+S3_ACCESS_KEY_ID = config("S3_ACCESS_KEY_ID")
+S3_SECRET_ACCESS_KEY = config("S3_SECRET_ACCESS_KEY")
+S3_BUCKET_NAME = config("S3_BUCKET_NAME")
+S3_PUBLIC_URL = config("S3_PUBLIC_URL")

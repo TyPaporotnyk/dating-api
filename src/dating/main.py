@@ -10,7 +10,7 @@ from slowapi.middleware import SlowAPIMiddleware
 from slowapi.util import get_remote_address
 
 from dating import api
-from dating.config import MEDIA_DIR, MEDIA_PATH, REDIS_URL, STATIC_DIR, STATIC_PATH
+from dating.config import REDIS_URL, STATIC_DIR, STATIC_PATH
 from dating.dependencies.container import container
 from dating.exception_handler import generate_exception_request
 from dating.exceptions import AppException
@@ -56,7 +56,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.mount(MEDIA_PATH, StaticFiles(directory=MEDIA_DIR), name="media")
 app.mount(STATIC_PATH, StaticFiles(directory=STATIC_DIR), name="static")
 
 api.setup(app)
