@@ -14,8 +14,8 @@ from dating.config import JWT_ACCESS_EXP, JWT_ALG, JWT_REFRESH_EXP, JWT_SECRET
 class TokenPair:
     access_token: str
     refresh_token: str
-    expires_in: int
-    refresh_expires_in: int
+    expires_in: float
+    refresh_expires_in: float
 
 
 class JWTPayload(BaseModel):
@@ -63,11 +63,15 @@ class JWTService:
         except ValidationError as e:
             raise InvalidToken from e
 
-    async def _check_revoked(self, jti: UUID) -> bool:
-        return not await self.redis.exists(f"refresh:{jti}")
+    def _get_store_key(self, payload: JWTPayload) -> str:
+        return f"token:{payload.type}:{payload.jti}"
+
+    async def _check_revoked(self, payload: JWTPayload) -> bool:
+        return not await self.redis.exists(self._get_store_key(payload))
 
     async def _store_jti(self, payload: JWTPayload):
-        await self.redis.setex(f"refresh:{payload.jti}", JWT_REFRESH_EXP, str(payload.sub))
+        ttl = max(int(payload.exp - datetime.now(UTC).timestamp()), 1)
+        await self.redis.setex(self._get_store_key(payload), ttl, str(payload.sub))
 
     async def generate_token_pair(self, user_id: UUID) -> TokenPair:
         access_payload = self._generate_payload(user_id, "access", JWT_ACCESS_EXP)
@@ -85,7 +89,7 @@ class JWTService:
 
     async def validate_token(self, token: str) -> JWTPayload:
         payload = self._decode(token)
-        if await self._check_revoked(payload.jti):
+        if await self._check_revoked(payload):
             raise InvalidToken
         return payload
 
@@ -95,9 +99,9 @@ class JWTService:
         if payload.type != "refresh":
             raise InvalidRefreshToken
 
-        if await self._check_revoked(payload.jti):
+        if await self._check_revoked(payload):
             raise InvalidRefreshToken
 
-        await self.redis.delete(f"refresh:{payload.jti}")
+        await self.redis.delete(self._get_store_key(payload))
 
         return await self.generate_token_pair(payload.sub)
