@@ -1,0 +1,52 @@
+services:
+  nginx:
+    image: nginx:1.22.0
+    ports:
+      - '80:80'
+    volumes:
+      - ./nginx/configs/:/etc/nginx/sites-enabled/:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./static/:/var/www/app/static/:ro
+      - ./media/:/var/www/app/media/:ro
+
+    depends_on:
+      - app
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    restart: unless-stopped
+    volumes:
+      - ./media:/app/media
+      - ./static:/app/static
+    command: ["poetry", "run", "gunicorn", "dating.main:app", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8000"]
+    environment:
+      DATABASE_HOST: db
+      REDIS_HOST: redis
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: postgis/postgis:18-3.6
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+    volumes:
+      - postgres-data:/var/lib/postgresql
+    restart: unless-stopped
+
+  redis:
+    image: redis:latest
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+
+
+volumes:
+  postgres-data:
+  redis-data:

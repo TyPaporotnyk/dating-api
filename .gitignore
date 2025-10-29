@@ -25,9 +25,6 @@ logs/
 environment/
 environment.py
 
-# Django static content from collectstatic
-static/
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

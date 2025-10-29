@@ -36,6 +36,9 @@ if not JWT_SECRET:
         "JWT secret not provided, this is required if you are using basic authentication"
     )
 
+STATIC_DIR = BASE_DIR / "static"
+STATIC_PATH = "/static"
+
 MEDIA_DIR = BASE_DIR / "media"
 MEDIA_PATH = "/media"
 
