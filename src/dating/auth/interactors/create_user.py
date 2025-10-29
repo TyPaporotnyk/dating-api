@@ -24,5 +24,5 @@ class CreateUserInteractor:
         await self.user_repository.create(user)
         await self.transaction_manager.commit()
 
-        token_pair = self.token_service.generate_token_pair(user_id=user.id)
+        token_pair = await self.token_service.generate_token_pair(user_id=user.id)
         return token_pair

@@ -63,12 +63,17 @@ class JWTService:
         except ValidationError as e:
             raise InvalidToken from e
 
-    def _check_revoked(self, jti: UUID) -> bool:
-        return False
+    async def _check_revoked(self, jti: UUID) -> bool:
+        return not await self.redis.exists(f"refresh:{jti}")
 
-    def generate_token_pair(self, user_id: UUID) -> TokenPair:
+    async def _store_refresh(self, payload: JWTPayload):
+        await self.redis.setex(f"refresh:{payload.jti}", JWT_REFRESH_EXP, str(payload.sub))
+
+    async def generate_token_pair(self, user_id: UUID) -> TokenPair:
         access_payload = self._generate_payload(user_id, "access", JWT_ACCESS_EXP)
         refresh_payload = self._generate_payload(user_id, "refresh", JWT_REFRESH_EXP)
+
+        await self._store_refresh(refresh_payload)
 
         return TokenPair(
             access_token=self._encode(access_payload),
@@ -77,20 +82,21 @@ class JWTService:
             refresh_expires_in=JWT_REFRESH_EXP,
         )
 
-    def validate_token(self, token: str) -> JWTPayload:
+    async def validate_token(self, token: str) -> JWTPayload:
         payload = self._decode(token)
-        if self._check_revoked(payload.jti):
+        if await self._check_revoked(payload.jti):
             raise InvalidToken
         return payload
 
-    def refresh_tokens(self, refresh_token: str) -> TokenPair:
+    async def refresh_tokens(self, refresh_token: str) -> TokenPair:
         payload = self._decode(refresh_token)
 
         if payload.type != "refresh":
             raise InvalidRefreshToken
 
-        if self._check_revoked(payload.jti):
+        if await self._check_revoked(payload.jti):
             raise InvalidRefreshToken
 
-        # TODO: need to add revors old refresh token with redis
-        return self.generate_token_pair(payload.sub)
+        await self.redis.delete(f"refresh:{payload.jti}")
+
+        return await self.generate_token_pair(payload.sub)

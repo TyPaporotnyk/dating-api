@@ -14,7 +14,7 @@ class LoginUserInteractor:
     async def __call__(self, command: LoginUserCommand) -> TokenPair:
         user = await self.user_repository.get_by_email(email=command.email)
         if user and user.validate_password(password=command.password):
-            token_pair = self.token_service.generate_token_pair(user_id=user.id)
+            token_pair = await self.token_service.generate_token_pair(user_id=user.id)
             return token_pair
 
         raise AuthError

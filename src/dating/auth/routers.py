@@ -59,7 +59,7 @@ async def login_user(
 async def refresh_token(
     data: RefreshTokenSchema, token_service: FromDishka[JWTService]
 ) -> ApiResponse[TokenPairResponse]:
-    token_pair = token_service.refresh_tokens(data.refresh_token)
+    token_pair = await token_service.refresh_tokens(data.refresh_token)
     return ApiResponse(data=TokenPairResponse.from_dto(token_pair))
 
 

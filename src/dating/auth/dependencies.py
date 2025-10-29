@@ -21,7 +21,7 @@ async def get_current_user(
 ) -> UUID:
     jwt_token = credentials.credentials
 
-    payload = jwt_service.validate_token(jwt_token)
+    payload = await jwt_service.validate_token(jwt_token)
 
     if payload.type != "access":
         raise AuthError
