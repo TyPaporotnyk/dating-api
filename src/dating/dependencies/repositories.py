@@ -3,6 +3,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from dating.auth.repositories.base import BaseUserRepository
 from dating.auth.repositories.sqlalchemy import SQLAlchemyUserRepository
+from dating.candidates.repositories.base import BaseCandidatesRepository
+from dating.candidates.repositories.sqlalchemy import SQLAlchemyCandidatesRepository
 from dating.filters.repositories.base import BaseProfileFilterRepository
 from dating.filters.repositories.sqlalchemy import SQLAlchemyProfileFilterRepository
 from dating.photos.repositories.base import BaseProfileImageRepository
@@ -27,3 +29,7 @@ class RepositoriesProvider(Provider):
     @provide(scope=Scope.REQUEST)
     def get_profile_filter_repository(self, session: AsyncSession) -> BaseProfileFilterRepository:
         return SQLAlchemyProfileFilterRepository(session=session)
+
+    @provide(scope=Scope.REQUEST)
+    def get_candidates_repository(self, session: AsyncSession) -> BaseCandidatesRepository:
+        return SQLAlchemyCandidatesRepository(session=session)
