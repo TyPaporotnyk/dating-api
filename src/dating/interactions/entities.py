@@ -7,12 +7,8 @@ from dating.enums import InteractionType
 
 @dataclass
 class Interaction(Entity):
-    from_user_id: UUID
-    to_user_id: UUID
+    first_user_id: UUID | None
+    second_user_id: UUID | None
 
-    interaction_type: InteractionType
-
-    is_match: bool = False
-
-    def make_match(self):
-        self.is_match = True
+    first_user_interaction_type: InteractionType | None
+    second_user_interaction_type: InteractionType | None

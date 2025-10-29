@@ -16,11 +16,13 @@ class SQLAlchemyInteractionRepository(BaseInteractionRepository):
         interaction_model = InteractionModel.from_entity(interaction)
         self.session.add(interaction_model)
 
-    async def get_interaction(self, from_user_id: UUID, to_user_id: UUID) -> Interaction | None:
+    async def get_interaction(
+        self, first_user_id: UUID, second_user_id: UUID
+    ) -> Interaction | None:
         query = select(InteractionModel).where(
             and_(
-                InteractionModel.from_user_id == from_user_id,
-                InteractionModel.to_user_id == to_user_id,
+                InteractionModel.first_user_id == first_user_id,
+                InteractionModel.second_user_id == second_user_id,
             )
         )
         result = await self.session.execute(query)
@@ -32,10 +34,10 @@ class SQLAlchemyInteractionRepository(BaseInteractionRepository):
             update(InteractionModel)
             .where(InteractionModel.id == interaction.id)
             .values(
-                from_user_id=interaction.from_user_id,
-                to_user_id=interaction.to_user_id,
-                interaction_type=interaction.interaction_type,
-                is_match=interaction.is_match,
+                first_user_id=interaction.first_user_id,
+                second_user_id=interaction.second_user_id,
+                first_user_interaction_type=interaction.first_user_interaction_type,
+                second_user_interaction_type=interaction.second_user_interaction_type,
             )
         )
         await self.session.execute(query)
