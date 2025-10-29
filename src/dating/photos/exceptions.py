@@ -16,3 +16,8 @@ class ImageUploadError(AppException):
 @dataclass(kw_only=True)
 class ImageDeleteError(AppException):
     error_code: str = "FAILED_DELETE_IMAGE"
+
+
+@dataclass(kw_only=True)
+class MaxProfileImagesCountReached(AppException):
+    error_code: str = "MAX_PROFILE_IMAGES_COUNT_REACHED"

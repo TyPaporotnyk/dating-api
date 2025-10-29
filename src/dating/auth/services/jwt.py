@@ -66,14 +66,15 @@ class JWTService:
     async def _check_revoked(self, jti: UUID) -> bool:
         return not await self.redis.exists(f"refresh:{jti}")
 
-    async def _store_refresh(self, payload: JWTPayload):
+    async def _store_jti(self, payload: JWTPayload):
         await self.redis.setex(f"refresh:{payload.jti}", JWT_REFRESH_EXP, str(payload.sub))
 
     async def generate_token_pair(self, user_id: UUID) -> TokenPair:
         access_payload = self._generate_payload(user_id, "access", JWT_ACCESS_EXP)
         refresh_payload = self._generate_payload(user_id, "refresh", JWT_REFRESH_EXP)
 
-        await self._store_refresh(refresh_payload)
+        await self._store_jti(access_payload)
+        await self._store_jti(refresh_payload)
 
         return TokenPair(
             access_token=self._encode(access_payload),

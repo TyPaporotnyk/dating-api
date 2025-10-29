@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from sqlalchemy import and_, delete, select
+from sqlalchemy import and_, delete, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from dating.photos.entities import ProfilePhoto
@@ -43,3 +43,12 @@ class SQLAlchemyProfileImageRepository(BaseProfileImageRepository):
         await self.session.execute(
             delete(ProfilePhotoModel).where(ProfilePhotoModel.id == image_id)
         )
+
+    async def get_count(self, profile_id: UUID) -> int:
+        query = (
+            select(func.count())
+            .select_from(ProfilePhotoModel)
+            .where(ProfilePhotoModel.profile_id == profile_id)
+        )
+        result = await self.session.execute(query)
+        return result.scalar_one()
