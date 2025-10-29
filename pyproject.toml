@@ -1,6 +1,6 @@
 [project]
 name = "dating-api"
-version = "0.1.0"
+version = "0.2.0"
 description = "FastAPI backend for a dating app"
 authors = [
     { name = "TyPaporotnyk", email = "daniil.svadkovsky@gmail.com" }
