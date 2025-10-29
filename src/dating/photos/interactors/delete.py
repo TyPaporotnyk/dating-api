@@ -4,8 +4,8 @@ from uuid import UUID
 from dating.database.managers.base import TransactionManager
 from dating.photos.exceptions import ImageNotFound
 from dating.photos.repositories.base import BaseProfileImageRepository
-from dating.photos.storages.base import Storage
 from dating.profiles.repositories.base import BaseProfileRepository
+from dating.storages.base import Storage
 
 
 @dataclass

@@ -8,7 +8,7 @@ import boto3
 from botocore.exceptions import ClientError
 
 from dating.photos.exceptions import ImageDeleteError, ImageUploadError
-from dating.photos.storages.base import Storage
+from dating.storages.base import Storage
 
 
 @dataclass(frozen=True)

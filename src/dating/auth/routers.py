@@ -11,10 +11,12 @@ from dating.auth.interactors.login import LoginUserInteractor
 from dating.auth.repositories.base import BaseUserRepository
 from dating.auth.schemas import (
     CreateUserSchema,
-    LoginUserResponse,
     LoginUserSchema,
+    RefreshTokenSchema,
     ResponseUserSchema,
+    TokenPairResponse,
 )
+from dating.auth.services.jwt import JWTService
 from dating.schemas import ApiResponse
 
 logger = logging.getLogger(__name__)
@@ -22,35 +24,43 @@ auth_router = APIRouter(route_class=DishkaRoute, tags=["auth"])
 user_router = APIRouter(route_class=DishkaRoute, tags=["users"])
 
 
-@auth_router.post("/register", response_model=ApiResponse[LoginUserResponse])
+@auth_router.post("/register", response_model=ApiResponse[TokenPairResponse])
 async def create_user(
     data: CreateUserSchema, interaction: FromDishka[CreateUserInteractor]
-) -> ApiResponse[LoginUserResponse]:
+) -> ApiResponse[TokenPairResponse]:
     command = CreateUserCommand(**data.model_dump())
     try:
-        user = await interaction(command=command)
+        token_pair = await interaction(command=command)
     except UserAlreadyExist as e:
         logger.warning("User already exist", extra={"email": command.email})
         raise e
 
     logger.info("User registered successfully", extra={"email": command.email})
-    return ApiResponse(data=LoginUserResponse.from_dto(user))
+    return ApiResponse(data=TokenPairResponse.from_dto(token_pair))
 
 
-@auth_router.post("/login", response_model=ApiResponse[LoginUserResponse])
+@auth_router.post("/login", response_model=ApiResponse[TokenPairResponse])
 async def login_user(
     data: LoginUserSchema, interactor: FromDishka[LoginUserInteractor]
-) -> ApiResponse[LoginUserResponse]:
+) -> ApiResponse[TokenPairResponse]:
     command = LoginUserCommand(**data.model_dump())
 
     try:
-        user = await interactor(command=command)
+        token_pair = await interactor(command=command)
     except (UserNotFound, AuthError) as e:
         logger.warning("User login failed: invalid credentials", extra={"email": command.email})
         raise e
 
     logger.info("User login successfully", extra={"email": command.email})
-    return ApiResponse(data=LoginUserResponse.from_dto(user))
+    return ApiResponse(data=TokenPairResponse.from_dto(token_pair))
+
+
+@auth_router.post("/refresh", response_model=ApiResponse[TokenPairResponse])
+async def refresh_token(
+    data: RefreshTokenSchema, token_service: FromDishka[JWTService]
+) -> ApiResponse[TokenPairResponse]:
+    token_pair = await token_service.refresh_tokens(data.refresh_token)
+    return ApiResponse(data=TokenPairResponse.from_dto(token_pair))
 
 
 @user_router.get("", response_model=ApiResponse[ResponseUserSchema])

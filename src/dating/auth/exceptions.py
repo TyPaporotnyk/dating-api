@@ -19,5 +19,15 @@ class AuthError(AppException):
 
 
 @dataclass(kw_only=True)
-class InvalidAccessToken(AppException):
-    error_code = "INVALID_AUTH_TOKEN"
+class InvalidToken(AppException):
+    error_code: str = "INVALID_TOKEN"
+
+
+@dataclass(kw_only=True)
+class InvalidAccessToken(InvalidToken):
+    error_code: str = "INVALID_ACCESS_TOKEN"
+
+
+@dataclass(kw_only=True)
+class InvalidRefreshToken(InvalidToken):
+    error_code: str = "INVALID_REFRESH_TOKEN"

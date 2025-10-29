@@ -29,7 +29,8 @@ SQLALCHEMY_DATABASE_URI = (
 
 JWT_SECRET = config("JWT_SECRET", default=None)
 JWT_ALG = config("JWT_ALG", default="HS256")
-JWT_EXP = config("JWT_EXP", cast=int, default=86400)
+JWT_ACCESS_EXP = config("JWT_ACCESS_EXP", cast=int, default=86400)
+JWT_REFRESH_EXP = config("JWT_REFRESH_EXP", cast=int, default=2592000)
 
 if not JWT_SECRET:
     logger.warning(
@@ -52,3 +53,12 @@ S3_ACCESS_KEY_ID = config("S3_ACCESS_KEY_ID")
 S3_SECRET_ACCESS_KEY = config("S3_SECRET_ACCESS_KEY")
 S3_BUCKET_NAME = config("S3_BUCKET_NAME")
 S3_PUBLIC_URL = config("S3_PUBLIC_URL")
+
+RABBITMQ_HOST = config("RABBITMQ_HOST", default="127.0.0.1")
+RABBITMQ_PORT = config("RABBITMQ_PORT", cast=int, default=5672)
+RABBITMQ_USER = config("RABBITMQ_USER")
+RABBITMQ_PASSWORD = config("RABBITMQ_PASSWORD")
+
+RABBITMQ_URL = f"amqp://{RABBITMQ_USER}:{RABBITMQ_PASSWORD}@{RABBITMQ_HOST}:{RABBITMQ_PORT}//"
+
+MATCH_NOTIFICATION_QUEUE = config("MATCH_NOTIFICATION_QUEUE", default="user_match_notification")
