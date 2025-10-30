@@ -17,30 +17,30 @@ router = APIRouter(route_class=DishkaRoute, tags=["filters"])
 
 
 @router.get("", response_model=ApiResponse[ResponseProfileFilterSchema])
-async def get_user_profile(
+async def get_user_filter(
     user_id: CurrentUser, repository: FromDishka[BaseProfileFilterRepository]
 ) -> ApiResponse[ResponseProfileFilterSchema]:
-    profile = await repository.try_get_by_user_id(user_id=user_id)
-    return ApiResponse(data=ResponseProfileFilterSchema.from_dto(profile))
+    filter = await repository.try_get_by_user_id(user_id=user_id)
+    return ApiResponse(data=ResponseProfileFilterSchema.from_dto(filter))
 
 
 @router.post("", response_model=ApiResponse[ResponseProfileFilterSchema])
-async def create_user_profile(
+async def create_user_filter(
     user_id: CurrentUser,
     data: CreateProfileFilterSchema,
     interactor: FromDishka[CreateProfileFilterInteractor],
 ) -> ApiResponse[ResponseProfileFilterSchema]:
     command = CreateProfileFilterCommand(**data.model_dump())
-    profile = await interactor(user_id=user_id, command=command)
-    return ApiResponse(data=ResponseProfileFilterSchema.from_dto(profile))
+    filter = await interactor(user_id=user_id, command=command)
+    return ApiResponse(data=ResponseProfileFilterSchema.from_dto(filter))
 
 
 @router.put("", response_model=ApiResponse[ResponseProfileFilterSchema])
-async def update_user_profile(
+async def update_user_filter(
     user_id: CurrentUser,
     data: UpdateProfileFilterSchema,
     interactor: FromDishka[UpdateProfileFilterInteractor],
 ) -> ApiResponse[ResponseProfileFilterSchema]:
     command = UpdateProfileFilterCommand(**data.model_dump())
-    profile = await interactor(user_id=user_id, command=command)
-    return ApiResponse(data=ResponseProfileFilterSchema.from_dto(profile))
+    filter = await interactor(user_id=user_id, command=command)
+    return ApiResponse(data=ResponseProfileFilterSchema.from_dto(filter))
