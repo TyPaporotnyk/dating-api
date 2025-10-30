@@ -5,6 +5,7 @@ from dating.auth.repositories.base import BaseUserRepository
 from dating.candidates.entities import Candidate
 from dating.candidates.pools import CandidatePool
 from dating.candidates.repositories.base import BaseCandidatesRepository
+from dating.config import CANDIDATES_GEN_SIZE
 from dating.filters.repositories.base import BaseProfileFilterRepository
 from dating.profiles.repositories.base import BaseProfileRepository
 
@@ -29,7 +30,9 @@ class CandidateFeedService:
         profile_filter = await self.profile_filter_repository.try_get_by_user_id(user_id=user_id)
 
         candidates = await self.candidates_repository.get_candidates(
-            current_user_profile=profile, current_user_filter=profile_filter
+            current_user_profile=profile,
+            current_user_filter=profile_filter,
+            size=CANDIDATES_GEN_SIZE,
         )
 
         await self.candidate_pool.put_to_pool(key=str(user_id), obj=candidates)
