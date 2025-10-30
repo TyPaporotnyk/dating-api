@@ -30,16 +30,6 @@ class JWTPayload(BaseModel):
 class JWTService:
     redis: Redis
 
-    def _encode(self, payload: JWTPayload) -> str:
-        payload_data = {
-            "jti": str(payload.jti),
-            "iat": payload.iat,
-            "exp": payload.exp,
-            "sub": str(payload.sub),
-            "type": payload.type,
-        }
-        return encode(payload_data, JWT_SECRET, algorithm=JWT_ALG)
-
     def _generate_payload(self, user_id: UUID, token_type: str, exp_seconds: int) -> JWTPayload:
         now = datetime.now(UTC)
         return JWTPayload(
@@ -50,17 +40,21 @@ class JWTService:
             type=token_type,
         )
 
+    def _encode(self, payload: JWTPayload) -> str:
+        payload_data = {
+            "jti": str(payload.jti),
+            "iat": payload.iat,
+            "exp": payload.exp,
+            "sub": str(payload.sub),
+            "type": payload.type,
+        }
+        return encode(payload_data, JWT_SECRET, algorithm=JWT_ALG)
+
     def _decode(self, token: str) -> JWTPayload:
         try:
             payload = decode(token, JWT_SECRET, algorithms=[JWT_ALG])
             return JWTPayload.model_validate(payload)
-        except ExpiredSignatureError as e:
-            raise InvalidToken from e
-        except DecodeError as e:
-            raise InvalidToken from e
-        except InvalidTokenError as e:
-            raise InvalidToken from e
-        except ValidationError as e:
+        except (ExpiredSignatureError, DecodeError, InvalidTokenError, ValidationError) as e:
             raise InvalidToken from e
 
     def _get_store_key(self, payload: JWTPayload) -> str:
