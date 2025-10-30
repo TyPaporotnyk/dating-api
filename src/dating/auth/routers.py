@@ -1,13 +1,15 @@
 import logging
 
 from dishka.integrations.fastapi import DishkaRoute, FromDishka
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 
 from dating.auth.commands import CreateUserCommand, LoginUserCommand
 from dating.auth.dependencies import CurrentUser
 from dating.auth.exceptions import AuthError, UserAlreadyExist, UserNotFound
-from dating.auth.interactors.create_user import CreateUserInteractor
 from dating.auth.interactors.login import LoginUserInteractor
+from dating.auth.interactors.register import CreateUserInteractor
+from dating.auth.interactors.verification_request import VerificationRequestInteractor
+from dating.auth.interactors.verification_submit import VerificationSubmitInteractor
 from dating.auth.repositories.base import BaseUserRepository
 from dating.auth.schemas import (
     CreateUserSchema,
@@ -15,9 +17,11 @@ from dating.auth.schemas import (
     RefreshTokenSchema,
     ResponseUserSchema,
     TokenPairResponse,
+    VerificationUserSubmitSchema,
 )
 from dating.auth.services.jwt import JWTService
-from dating.schemas import ApiResponse
+from dating.limiter import limiter
+from dating.schemas import ApiResponse, MessageSchema
 
 logger = logging.getLogger(__name__)
 auth_router = APIRouter(route_class=DishkaRoute, tags=["auth"])
@@ -63,7 +67,7 @@ async def refresh_token(
     return ApiResponse(data=TokenPairResponse.from_dto(token_pair))
 
 
-@user_router.get("", response_model=ApiResponse[ResponseUserSchema])
+@user_router.get("/me", response_model=ApiResponse[ResponseUserSchema])
 async def get_current_user(
     user_id: CurrentUser, repository: FromDishka[BaseUserRepository]
 ) -> ApiResponse[ResponseUserSchema]:
@@ -73,3 +77,27 @@ async def get_current_user(
         logger.warning("User not found", extra={"user_id": user_id})
         raise e
     return ApiResponse(data=ResponseUserSchema.from_dto(user))
+
+
+@user_router.post("/verification/request", response_model=ApiResponse[MessageSchema])
+@limiter.limit("1/minute")
+async def verification_user_request(
+    request: Request, user_id: CurrentUser, interactor: FromDishka[VerificationRequestInteractor]
+) -> ApiResponse[MessageSchema]:
+    await interactor(user_id=user_id)
+    return ApiResponse(data=MessageSchema(message="Verification code has been send"))
+
+
+@user_router.post("/verification/submit", response_model=ApiResponse[MessageSchema])
+@limiter.limit("5/minute")
+async def verification_user_submit(
+    request: Request,
+    user_id: CurrentUser,
+    data: VerificationUserSubmitSchema,
+    interactor: FromDishka[VerificationSubmitInteractor],
+) -> ApiResponse[MessageSchema]:
+    is_valid = await interactor(user_id=user_id, code=data.code)
+
+    message = "User has been verified" if is_valid else "Provided code is not valid"
+
+    return ApiResponse(data=MessageSchema(message=message))

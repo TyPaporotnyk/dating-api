@@ -6,12 +6,13 @@ from dating.auth.services.jwt import TokenPair
 
 class BaseUserSchema(BaseModel):
     email: EmailStr
+    is_verified: bool
 
 
 class ResponseUserSchema(BaseUserSchema):
     @classmethod
     def from_dto(cls, user: User) -> "ResponseUserSchema":
-        return ResponseUserSchema(email=user.email)
+        return ResponseUserSchema(email=user.email, is_verified=user.is_verified)
 
 
 class CreateUserSchema(BaseModel):
@@ -43,3 +44,7 @@ class TokenPairResponse(BaseModel):
             expires_in=entity.expires_in,
             refresh_expires_in=entity.refresh_expires_in,
         )
+
+
+class VerificationUserSubmitSchema(BaseModel):
+    code: str

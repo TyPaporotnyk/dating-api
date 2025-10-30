@@ -5,6 +5,7 @@ from dating.dependencies.interactors import InteractorsProvider
 from dating.dependencies.pools import PoolProvider
 from dating.dependencies.repositories import RepositoriesProvider
 from dating.dependencies.services import ServiceProvider
+from dating.dependencies.workers import WorkersProvider
 
 
 def make_base_providers():
@@ -14,6 +15,7 @@ def make_base_providers():
         InteractorsProvider(),
         ServiceProvider(),
         PoolProvider(),
+        WorkersProvider(),
     ]
 
 

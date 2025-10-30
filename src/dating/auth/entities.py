@@ -7,6 +7,7 @@ from dating.entities import Entity
 @dataclass
 class User(Entity):
     email: str
+    is_verified: bool = False
     hashed_password: str | None = None
 
     def set_password(self, password: str) -> None:
@@ -17,3 +18,6 @@ class User(Entity):
             raise ValueError("Password is not set")
 
         return pwd_service.validate_password(password, self.hashed_password)
+
+    def verify(self):
+        self.is_verified = True
