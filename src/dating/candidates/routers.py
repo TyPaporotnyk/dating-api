@@ -7,6 +7,7 @@ from dating.candidates.services.feed import CandidateFeedService
 from dating.schemas import ApiResponse
 
 router = APIRouter(route_class=DishkaRoute, tags=["candidates"])
+dev_router = APIRouter(route_class=DishkaRoute, tags=["candidates", "dev"])
 
 
 @router.get("/next", response_model=ApiResponse[ResponseCandidateSchema | None])
@@ -19,14 +20,14 @@ async def get_next_candidate(
     return ApiResponse(data=candidate_schema)
 
 
-@router.post("/generate", deprecated=True)
+@dev_router.post("/generate", deprecated=True)
 async def generate_candidates(
     user_id: CurrentUser, service: FromDishka[CandidateFeedService]
 ) -> None:
     await service.generate_candidates(user_id)
 
 
-@router.get("/count", deprecated=True)
+@dev_router.get("/count", deprecated=True)
 async def get_candidates_count(
     user_id: CurrentUser, service: FromDishka[CandidateFeedService]
 ) -> int:
