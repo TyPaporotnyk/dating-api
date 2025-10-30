@@ -1,10 +1,12 @@
 from dishka import Provider, Scope, provide
-from redis.asyncio import Redis
 
 from dating.auth.services.jwt import JWTService
+from dating.candidates.services.feed import CandidateFeedService
 
 
 class ServiceProvider(Provider):
-    @provide(scope=Scope.APP)
-    def get_jwt_service(self, redis: Redis) -> JWTService:
-        return JWTService(redis=redis)
+    scope = Scope.APP
+
+    get_jwt_service = provide(JWTService)
+
+    get_candidate_feed_service = provide(CandidateFeedService, scope=Scope.REQUEST)

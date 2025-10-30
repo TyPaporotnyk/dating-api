@@ -1,6 +1,7 @@
 from abc import ABC
 from dataclasses import dataclass, field
 from datetime import datetime
+from typing import Self
 from uuid import UUID
 
 from dating.utils.datetime import get_datetime_utc_now
@@ -20,3 +21,18 @@ class Entity(ABC):
 
     def __hash__(self) -> int:
         return hash(self.id)
+
+    @classmethod
+    def from_dict(cls, data: dict) -> Self:
+        return cls(
+            id=UUID(data["id"]),
+            created_at=datetime.fromisoformat(data["created_at"]),
+            updated_at=datetime.fromisoformat(data["updated_at"]),
+        )
+
+    def to_dict(self) -> dict:
+        return {
+            "id": str(self.id),
+            "created_at": self.created_at.isoformat(),
+            "updated_at": self.updated_at.isoformat(),
+        }

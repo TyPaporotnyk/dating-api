@@ -16,5 +16,5 @@ class Meta(BaseModel):
 
 
 class ApiResponse(BaseModel, Generic[T]):
-    data: T | list[T] | None = None
+    data: T | None = None
     meta: Meta | None = None

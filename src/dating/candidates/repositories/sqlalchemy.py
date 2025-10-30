@@ -1,6 +1,7 @@
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from dating.candidates.entities import Candidate
 from dating.candidates.repositories.base import BaseCandidatesRepository
 from dating.filters.entities import ProfileFilter
 from dating.filters.models import ProfileFilterModel
@@ -14,8 +15,8 @@ class SQLAlchemyCandidatesRepository(BaseCandidatesRepository):
         self.session = session
 
     async def get_candidates(
-        self, current_user_profile: Profile, current_user_filter: ProfileFilter
-    ) -> list[Profile]:
+        self, current_user_profile: Profile, current_user_filter: ProfileFilter, size: int = 20
+    ) -> list[Candidate]:
         user_location = current_user_profile.location
 
         if not user_location:
@@ -30,7 +31,7 @@ class SQLAlchemyCandidatesRepository(BaseCandidatesRepository):
         )
 
         query = (
-            select(ProfileModel)
+            select(ProfileModel.id, distance.label("distance"))
             .join(ProfileFilterModel, ProfileFilterModel.user_id == ProfileModel.user_id)
             .where(ProfileModel.user_id != current_user_profile.user_id)
             .where(ProfileModel.gender == current_user_filter.gender_preference)
@@ -60,10 +61,14 @@ class SQLAlchemyCandidatesRepository(BaseCandidatesRepository):
                 )
             )
             .order_by(distance)
-            .limit(20)
+            .limit(size)
         )
 
         result = await self.session.execute(query)
-        rows = result.scalars().all()
+        rows = result.all()
 
-        return [row.to_entity() for row in rows]
+        candidates = [
+            Candidate(profile_id=profile_id, distance_between=int(distance_value))
+            for profile_id, distance_value in rows
+        ]
+        return candidates
