@@ -32,7 +32,6 @@ app = FastAPI(
     swagger_ui_parameters=swagger_ui_parameters,
 )
 
-
 app.state.limiter = limiter
 app.add_exception_handler(AppException, generate_exception_request)  # type: ignore
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)  # type: ignore
