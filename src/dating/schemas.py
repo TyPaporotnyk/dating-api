@@ -15,6 +15,10 @@ class Meta(BaseModel):
     pagination: Pagination | None = None
 
 
+class MessageSchema(BaseModel):
+    message: str
+
+
 class ApiResponse(BaseModel, Generic[T]):
     data: T | None = None
     meta: Meta | None = None

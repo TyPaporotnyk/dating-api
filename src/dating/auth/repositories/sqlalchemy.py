@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from dating.auth.entities import User
@@ -35,3 +35,15 @@ class SQLAlchemyUserRepository(BaseUserRepository):
         result = await self.session.execute(query)
         user_model = result.scalar_one_or_none()
         return user_model.to_entity() if user_model else None
+
+    async def update(self, user: User):
+        query = (
+            update(UserModel)
+            .where(UserModel.id == user.id)
+            .values(
+                email=user.email,
+                is_verified=user.is_verified,
+                hashed_password=user.hashed_password,
+            )
+        )
+        await self.session.execute(query)

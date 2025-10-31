@@ -17,7 +17,7 @@ def setup(app: FastAPI) -> None:
 
     account_router = APIRouter()
 
-    account_router.include_router(user_router, prefix="/me")
+    account_router.include_router(user_router, prefix="")
 
     account_router.include_router(profile_router, prefix="/profiles")
     account_router.include_router(photo_router, prefix="/photos")

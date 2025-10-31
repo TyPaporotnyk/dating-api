@@ -31,3 +31,13 @@ class InvalidAccessToken(InvalidToken):
 @dataclass(kw_only=True)
 class InvalidRefreshToken(InvalidToken):
     error_code: str = "INVALID_REFRESH_TOKEN"
+
+
+@dataclass(kw_only=True)
+class AlreadyVerified(InvalidToken):
+    error_code: str = "ALREADY_VERIFIED"
+
+
+@dataclass(kw_only=True)
+class IsNotVerified(InvalidToken):
+    error_code: str = "IS_NOT_VERIFIED"

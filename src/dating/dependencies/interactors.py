@@ -1,7 +1,9 @@
 from dishka import Provider, Scope, provide
 
-from dating.auth.interactors.create_user import CreateUserInteractor
 from dating.auth.interactors.login import LoginUserInteractor
+from dating.auth.interactors.register import CreateUserInteractor
+from dating.auth.interactors.verification_request import VerificationRequestInteractor
+from dating.auth.interactors.verification_submit import VerificationSubmitInteractor
 from dating.filters.interactors.create import CreateProfileFilterInteractor
 from dating.filters.interactors.update import UpdateProfileFilterInteractor
 from dating.interactions.interactors.match import CreateInteractionInteractor
@@ -18,6 +20,8 @@ class InteractorsProvider(Provider):
 
     get_user_interactor = provide(CreateUserInteractor)
     login_user_interactor = provide(LoginUserInteractor)
+    verification_request_interactor = provide(VerificationRequestInteractor)
+    verification_submit_interactor = provide(VerificationSubmitInteractor)
 
     create_profile_interactor = provide(CreateProfileInteractor)
     update_prodile_interactor = provide(UpdateProfileInteractor)
