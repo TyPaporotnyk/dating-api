@@ -10,7 +10,6 @@ from dating.auth.interactors.login import LoginUserInteractor
 from dating.auth.interactors.register import CreateUserInteractor
 from dating.auth.interactors.verification_request import VerificationRequestInteractor
 from dating.auth.interactors.verification_submit import VerificationSubmitInteractor
-from dating.auth.repositories.base import BaseUserRepository
 from dating.auth.schemas import (
     CreateUserSchema,
     LoginUserSchema,
@@ -68,23 +67,16 @@ async def refresh_token(
 
 
 @user_router.get("/me", response_model=ApiResponse[ResponseUserSchema])
-async def get_current_user(
-    user_id: CurrentUser, repository: FromDishka[BaseUserRepository]
-) -> ApiResponse[ResponseUserSchema]:
-    try:
-        user = await repository.try_get_by_id(user_id=user_id)
-    except UserNotFound as e:
-        logger.warning("User not found", extra={"user_id": user_id})
-        raise e
+async def get_current_user(user: CurrentUser) -> ApiResponse[ResponseUserSchema]:
     return ApiResponse(data=ResponseUserSchema.from_dto(user))
 
 
 @user_router.post("/verification/request", response_model=ApiResponse[MessageSchema])
 @limiter.limit("1/minute")
 async def verification_user_request(
-    request: Request, user_id: CurrentUser, interactor: FromDishka[VerificationRequestInteractor]
+    request: Request, user: CurrentUser, interactor: FromDishka[VerificationRequestInteractor]
 ) -> ApiResponse[MessageSchema]:
-    await interactor(user_id=user_id)
+    await interactor(user_id=user.id)
     return ApiResponse(data=MessageSchema(message="Verification code has been send"))
 
 
@@ -92,11 +84,11 @@ async def verification_user_request(
 @limiter.limit("5/minute")
 async def verification_user_submit(
     request: Request,
-    user_id: CurrentUser,
+    user: CurrentUser,
     data: VerificationUserSubmitSchema,
     interactor: FromDishka[VerificationSubmitInteractor],
 ) -> ApiResponse[MessageSchema]:
-    is_valid = await interactor(user_id=user_id, code=data.code)
+    is_valid = await interactor(user_id=user.id, code=data.code)
 
     message = "User has been verified" if is_valid else "Provided code is not valid"
 

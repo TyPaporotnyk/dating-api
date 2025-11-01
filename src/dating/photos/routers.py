@@ -17,22 +17,22 @@ router = APIRouter(route_class=DishkaRoute, tags=["photos"])
 
 @router.post("", response_model=ApiResponse[BaseProfilePhotoSchema])
 async def upload_photo(
-    user_id: CurrentUser,
+    user: CurrentUser,
     interactor: FromDishka[CreateProfilePhotoInteractor],
     file: UploadFile = File(...),
 ) -> ApiResponse[BaseProfilePhotoSchema]:
     validate_file_size_type(file)
     command = CreateProfilePhotoCommand(file=await file.read())
-    profile_photo = await interactor(user_id=user_id, command=command)
+    profile_photo = await interactor(user_id=user.id, command=command)
 
     return ApiResponse(data=BaseProfilePhotoSchema.from_dto(profile_photo))
 
 
 @router.get("", response_model=ApiResponse[list[BaseProfilePhotoSchema]])
 async def get_all_photos(
-    user_id: CurrentUser, interactor: FromDishka[GetAllProfilePhotoInteractor]
+    user: CurrentUser, interactor: FromDishka[GetAllProfilePhotoInteractor]
 ) -> ApiResponse[list[BaseProfilePhotoSchema]]:
-    profile_photos = await interactor(user_id=user_id)
+    profile_photos = await interactor(user_id=user.id)
 
     return ApiResponse(
         data=[BaseProfilePhotoSchema.from_dto(profile_photo) for profile_photo in profile_photos]
@@ -42,7 +42,7 @@ async def get_all_photos(
 @router.delete("/{image_id}")
 async def delete_photo(
     image_id: UUID,
-    user_id: CurrentUser,
+    user: CurrentUser,
     interactor: FromDishka[DeleteProfilePhotoInteractor],
 ) -> None:
-    await interactor(user_id=user_id, image_id=image_id)
+    await interactor(user_id=user.id, image_id=image_id)

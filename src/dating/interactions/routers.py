@@ -14,11 +14,11 @@ router = APIRouter(route_class=DishkaRoute, prefix="/users", tags=["interactions
 @router.post("/{to_user_id}/like", response_model=ApiResponse, status_code=status.HTTP_201_CREATED)
 async def like_user(
     to_user_id: UUID,
-    user_id: CurrentUser,
+    user: CurrentUser,
     interactor: FromDishka[CreateInteractionInteractor],
 ) -> ApiResponse:
     interaction = await interactor(
-        from_user_id=user_id,
+        from_user_id=user.id,
         to_user_id=to_user_id,
         interaction_type=InteractionType.LIKE,
     )
@@ -30,11 +30,11 @@ async def like_user(
 )
 async def dislike_user(
     to_user_id: UUID,
-    user_id: CurrentUser,
+    user: CurrentUser,
     interactor: FromDishka[CreateInteractionInteractor],
 ) -> ApiResponse:
     interaction = await interactor(
-        from_user_id=user_id,
+        from_user_id=user.id,
         to_user_id=to_user_id,
         interaction_type=InteractionType.DISLIKE,
     )

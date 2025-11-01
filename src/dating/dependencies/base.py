@@ -14,7 +14,7 @@ from dating.config import (
     S3_PUBLIC_URL,
     S3_SECRET_ACCESS_KEY,
 )
-from dating.database.core import async_session_maker
+from dating.database.core import get_session
 from dating.database.managers.base import TransactionManager
 from dating.database.managers.sqlalchemy import SQLAlchemyTransactionManager
 from dating.notifications.clients.email.base import EmailClient
@@ -26,7 +26,7 @@ from dating.storages.s3 import S3Credentials, S3Storage
 class BaseAppProvider(Provider):
     @provide(scope=Scope.REQUEST)
     async def get_session(self) -> AsyncGenerator[AsyncSession]:
-        async with async_session_maker() as session:
+        async for session in get_session():
             yield session
 
     @provide(scope=Scope.REQUEST)
