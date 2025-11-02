@@ -1,5 +1,4 @@
 from dating.auth.dependencies import CurrentUser
-from dating.permissions.exception import AccessDenied
 from dating.permissions.permissions import Permission
 
 
@@ -9,8 +8,7 @@ class FastApiPermissionManager:
 
     def __call__(self, user: CurrentUser):
         for permission in self.permissions:
-            if not permission(user):
-                raise AccessDenied
+            permission(user)
 
     def __hash__(self) -> int:
         return hash(self.permissions)

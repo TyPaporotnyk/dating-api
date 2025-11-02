@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 from dating.exceptions import AppException
+from dating.permissions.exception import PermissionException
 
 
 @dataclass(kw_only=True)
@@ -41,3 +42,8 @@ class AlreadyVerified(InvalidToken):
 @dataclass(kw_only=True)
 class IsNotVerified(InvalidToken):
     error_code: str = "IS_NOT_VERIFIED"
+
+
+@dataclass(kw_only=True)
+class NotVerified(PermissionException):
+    error_code: str = "USER_NOT_VERIFIED"

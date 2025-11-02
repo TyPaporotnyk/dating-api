@@ -4,5 +4,5 @@ from dating.exceptions import AppException
 
 
 @dataclass(kw_only=True)
-class AccessDenied(AppException):
-    error_code: str = "ACCESS_DENIED"
+class PermissionException(AppException):
+    error_code: str = "PERMISSION_DENIED"

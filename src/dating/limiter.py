@@ -8,6 +8,6 @@ limiter = Limiter(
     storage_uri=REDIS_URL,
     in_memory_fallback_enabled=True,
     strategy="moving-window",
-    headers_enabled=True,
+    headers_enabled=False,
     default_limits=["100/minute"],
 )

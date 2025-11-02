@@ -1,7 +1,10 @@
 from dating.auth.entities import User
+from dating.auth.exceptions import NotVerified
 from dating.permissions.permissions import Permission
 
 
 class IsVerified(Permission):
-    def __call__(self, user: User) -> bool:
-        return user.is_verified is True
+    exception_class = NotVerified
+
+    def validate(self, user: User) -> bool:
+        return user.is_verified
