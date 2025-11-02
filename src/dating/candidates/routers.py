@@ -12,23 +12,19 @@ dev_router = APIRouter(route_class=DishkaRoute, tags=["candidates", "dev"])
 
 @router.get("/next", response_model=ApiResponse[ResponseCandidateSchema | None])
 async def get_next_candidate(
-    user_id: CurrentUser, service: FromDishka[CandidateFeedService]
+    user: CurrentUser, service: FromDishka[CandidateFeedService]
 ) -> ApiResponse[ResponseCandidateSchema | None]:
-    candidate = await service.next_candidate(user_id)
+    candidate = await service.next_candidate(user.id)
 
     candidate_schema = ResponseCandidateSchema.from_dto(candidate) if candidate else None
     return ApiResponse(data=candidate_schema)
 
 
 @dev_router.post("/generate", deprecated=True)
-async def generate_candidates(
-    user_id: CurrentUser, service: FromDishka[CandidateFeedService]
-) -> None:
-    await service.generate_candidates(user_id)
+async def generate_candidates(user: CurrentUser, service: FromDishka[CandidateFeedService]) -> None:
+    await service.generate_candidates(user.id)
 
 
 @dev_router.get("/count", deprecated=True)
-async def get_candidates_count(
-    user_id: CurrentUser, service: FromDishka[CandidateFeedService]
-) -> int:
-    return await service.get_candidate_pool_size(user_id)
+async def get_candidates_count(user: CurrentUser, service: FromDishka[CandidateFeedService]) -> int:
+    return await service.get_candidate_pool_size(user.id)

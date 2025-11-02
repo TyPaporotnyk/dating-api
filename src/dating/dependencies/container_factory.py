@@ -10,8 +10,8 @@ from dating.dependencies.workers import WorkersProvider
 
 def make_base_providers():
     return [
-        BaseAppProvider(),
         RepositoriesProvider(),
+        BaseAppProvider(),
         InteractorsProvider(),
         ServiceProvider(),
         PoolProvider(),

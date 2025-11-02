@@ -16,6 +16,10 @@ from dating.profiles.repositories.sqlalchemy import SQLAlchemyProfileRepository
 
 
 class RepositoriesProvider(Provider):
+    @provide(scope=Scope.APP)
+    def get_app_user_repository(self, session: AsyncSession) -> BaseUserRepository:
+        return SQLAlchemyUserRepository(session=session)
+
     @provide(scope=Scope.REQUEST)
     def get_user_repository(self, session: AsyncSession) -> BaseUserRepository:
         return SQLAlchemyUserRepository(session=session)

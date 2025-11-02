@@ -25,36 +25,36 @@ router = APIRouter(route_class=DishkaRoute, tags=["profiles"])
 
 @router.get("", response_model=ApiResponse[ResponseProfileSchema])
 async def get_user_profile(
-    user_id: CurrentUser, repository: FromDishka[BaseProfileRepository]
+    user: CurrentUser, repository: FromDishka[BaseProfileRepository]
 ) -> ApiResponse[ResponseProfileSchema]:
-    profile = await repository.try_get_by_user_id(user_id=user_id)
+    profile = await repository.try_get_by_user_id(user_id=user.id)
     return ApiResponse(data=ResponseProfileSchema.from_dto(profile))
 
 
 @router.post("", response_model=ApiResponse[ResponseProfileSchema])
 async def create_user_profile(
-    user_id: CurrentUser, data: CreateProfileSchema, interactor: FromDishka[CreateProfileInteractor]
+    user: CurrentUser, data: CreateProfileSchema, interactor: FromDishka[CreateProfileInteractor]
 ) -> ApiResponse[ResponseProfileSchema]:
     command = CreateProfileCommand(**data.model_dump())
-    profile = await interactor(user_id=user_id, command=command)
+    profile = await interactor(user_id=user.id, command=command)
     return ApiResponse(data=ResponseProfileSchema.from_dto(profile))
 
 
 @router.put("", response_model=ApiResponse[ResponseProfileSchema])
 async def update_user_profile(
-    user_id: CurrentUser, data: UpdateProfileSchema, interactor: FromDishka[UpdateProfileInteractor]
+    user: CurrentUser, data: UpdateProfileSchema, interactor: FromDishka[UpdateProfileInteractor]
 ) -> ApiResponse[ResponseProfileSchema]:
     command = UpdateProfileCommand(**data.model_dump())
-    profile = await interactor(user_id=user_id, command=command)
+    profile = await interactor(user_id=user.id, command=command)
     return ApiResponse(data=ResponseProfileSchema.from_dto(profile))
 
 
 @router.patch("/location", response_model=ApiResponse[ResponseProfileSchema])
 async def update_user_profile_location(
-    user_id: CurrentUser,
+    user: CurrentUser,
     data: UpdateProfileLocationSchema,
     interactor: FromDishka[UpdateProfileLocationInteractor],
 ) -> ApiResponse[ResponseProfileSchema]:
     command = UpdateProfileLocationCommand(Coordinates(**data.model_dump()))
-    profile = await interactor(user_id=user_id, command=command)
+    profile = await interactor(user_id=user.id, command=command)
     return ApiResponse(data=ResponseProfileSchema.from_dto(profile))
