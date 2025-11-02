@@ -1,3 +1,4 @@
+import logging
 from dataclasses import dataclass
 from uuid import UUID
 
@@ -5,9 +6,11 @@ from dating.auth.repositories.base import BaseUserRepository
 from dating.candidates.entities import Candidate
 from dating.candidates.pools import CandidatePool
 from dating.candidates.repositories.base import BaseCandidatesRepository
-from dating.config import CANDIDATES_GEN_SIZE
+from dating.config import CANDIDATES_GEN_SIZE, CANDIDATES_MIN_POOL_SIZE
 from dating.filters.repositories.base import BaseProfileFilterRepository
 from dating.profiles.repositories.base import BaseProfileRepository
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -21,6 +24,12 @@ class CandidateFeedService:
     async def next_candidate(self, user_id: UUID) -> Candidate | None:
         await self.user_repository.try_get_by_id(user_id=user_id)
         candidate = await self.candidate_pool.next_from_pool(key=str(user_id))
+        candidates_pool_size = await self.get_candidate_pool_size(user_id=user_id)
+
+        if candidates_pool_size <= CANDIDATES_MIN_POOL_SIZE:
+            # Throw event to message brocker and generate new candidates to user
+            logger.info("Sent event to generate candidates pool for user")
+
         return candidate
 
     async def generate_candidates(self, user_id: UUID):
