@@ -18,7 +18,7 @@ from dating.profiles.schemas import (
     UpdateProfileSchema,
 )
 from dating.schemas import ApiResponse
-from dating.value_objects.coordinates import Coordinates
+from dating.value_objects import Coordinates
 
 router = APIRouter(route_class=DishkaRoute, tags=["profiles"])
 
