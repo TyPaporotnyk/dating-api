@@ -8,7 +8,7 @@ from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 
-from dating import api
+from dating.api import setup_api
 from dating.config import STATIC_DIR, STATIC_PATH
 from dating.dependencies.container import container
 from dating.exception_handler import generate_exception_request
@@ -49,4 +49,4 @@ app.add_middleware(
 
 app.mount(STATIC_PATH, StaticFiles(directory=STATIC_DIR), name="static")
 
-api.setup(app)
+setup_api(app)

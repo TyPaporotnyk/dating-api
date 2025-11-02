@@ -12,7 +12,7 @@ from dating.photos.routers import router as photo_router
 from dating.profiles.routers import router as profile_router
 
 
-def setup(app: FastAPI) -> None:
+def setup_api(app: FastAPI) -> None:
     api_router = APIRouter()
     permission_manager = FastApiPermissionManager((IsVerified(),))
 
