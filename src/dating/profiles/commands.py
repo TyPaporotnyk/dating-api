@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from dating.commands import BaseCommand
 from dating.enums import Gender
-from dating.value_objects.coordinates import Coordinates
+from dating.value_objects import Coordinates
 
 
 @dataclass(frozen=True)

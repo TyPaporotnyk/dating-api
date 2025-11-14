@@ -1,6 +1,10 @@
+from abc import ABC
 from dataclasses import dataclass
 
-from dating.value_objects.base import ValueObject
+
+@dataclass(frozen=True)
+class ValueObject(ABC):
+    pass
 
 
 @dataclass(frozen=True)

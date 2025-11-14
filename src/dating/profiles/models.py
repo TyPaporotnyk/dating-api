@@ -11,7 +11,7 @@ from dating.database.core import BaseModel
 from dating.database.mixins import TimeStampMinix, UUIDMixin
 from dating.enums import Gender
 from dating.profiles.entities import Profile
-from dating.value_objects.coordinates import Coordinates
+from dating.value_objects import Coordinates
 
 
 class ProfileModel(BaseModel, UUIDMixin, TimeStampMinix):

@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 from dating.enums import Gender
 from dating.profiles.entities import Profile
-from dating.value_objects.coordinates import Coordinates
+from dating.value_objects import Coordinates
 
 
 class BaseProfileSchema(BaseModel):

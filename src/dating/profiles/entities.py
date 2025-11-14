@@ -3,7 +3,7 @@ from uuid import UUID
 
 from dating.entities import Entity
 from dating.enums import Gender
-from dating.value_objects.coordinates import Coordinates
+from dating.value_objects import Coordinates
 
 
 @dataclass

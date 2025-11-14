@@ -1,11 +1,14 @@
 from collections.abc import AsyncGenerator
 
+from aio_pika import connect_robust as rabbit_connect
+from aio_pika.abc import AbstractRobustConnection
 from dishka import Provider, Scope, provide
 from httpx import AsyncClient
 from redis.asyncio import Redis, from_url
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from dating.config import (
+    RABBITMQ_URL,
     REDIS_URL,
     RESEND_API_KEY,
     S3_ACCESS_KEY_ID,
@@ -53,3 +56,7 @@ class BaseAppProvider(Provider):
     async def get_email_client(self) -> AsyncGenerator[EmailClient]:
         async with AsyncClient(base_url="https://api.resend.com", timeout=30) as client:
             yield ResendEmailClient(http_client=client, api_key=RESEND_API_KEY)
+
+    @provide(scope=Scope.APP)
+    async def get_rabbit_connection(self) -> AbstractRobustConnection:
+        return await rabbit_connect(RABBITMQ_URL)
