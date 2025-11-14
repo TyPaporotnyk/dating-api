@@ -2,7 +2,7 @@ services:
   nginx:
     image: nginx:1.22.0
     ports:
-      - '80:80'
+      - '${NGINX_PORT}:80'
     volumes:
       - ./nginx/configs/:/etc/nginx/sites-enabled/:ro
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
