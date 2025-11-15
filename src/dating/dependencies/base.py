@@ -7,6 +7,12 @@ from httpx import AsyncClient
 from redis.asyncio import Redis, from_url
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from dating.candidates.commands import GetNextCandidateCommand
+from dating.candidates.events import GenerateCandidatesPoolEvent
+from dating.candidates.handlers.generate_candidates import GenerateCandidatesPoolEventHandler
+from dating.candidates.handlers.get_candidates import GetNextCandidateCommandHandler
+from dating.candidates.pools import CandidatePool
+from dating.candidates.repositories.base import BaseCandidatesRepository
 from dating.config import (
     RABBITMQ_URL,
     REDIS_URL,
@@ -20,8 +26,11 @@ from dating.config import (
 from dating.database.core import get_session
 from dating.database.managers.base import TransactionManager
 from dating.database.managers.sqlalchemy import SQLAlchemyTransactionManager
+from dating.filters.repositories.base import BaseProfileFilterRepository
+from dating.mediator.mediator import Mediator
 from dating.notifications.clients.email.base import EmailClient
 from dating.notifications.clients.email.resend import ResendEmailClient
+from dating.profiles.repositories.base import BaseProfileRepository
 from dating.storages.base import Storage
 from dating.storages.s3 import S3Credentials, S3Storage
 
@@ -60,3 +69,33 @@ class BaseAppProvider(Provider):
     @provide(scope=Scope.APP)
     async def get_rabbit_connection(self) -> AbstractRobustConnection:
         return await rabbit_connect(RABBITMQ_URL)
+
+    @provide(scope=Scope.REQUEST)
+    async def get_mediator(
+        self,
+        profile_repository: BaseProfileRepository,
+        profile_filter_repository: BaseProfileFilterRepository,
+        candidates_repository: BaseCandidatesRepository,
+        candidate_pool: CandidatePool,
+    ) -> Mediator:
+        mediator = Mediator()
+
+        # Privede handlers
+        get_next_candidate_handler = GetNextCandidateCommandHandler(
+            _mediator=mediator, candidate_pool=candidate_pool
+        )
+
+        gen_candidates_handler = GenerateCandidatesPoolEventHandler(
+            profile_repository=profile_repository,
+            profile_filter_repository=profile_filter_repository,
+            candidates_repository=candidates_repository,
+            candidate_pool=candidate_pool,
+        )
+
+        # Register commands
+        mediator.register_command(GetNextCandidateCommand, get_next_candidate_handler)
+
+        # Register events
+        mediator.register_events(GenerateCandidatesPoolEvent, [gen_candidates_handler])
+
+        return mediator
